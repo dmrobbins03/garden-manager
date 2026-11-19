@@ -8,5 +8,560 @@
     "usdaZone": "10b",
     "notes": "Raised cedar beds. Alkaline soil."
   },
-  "plantings": []
+  "plantings": [
+    {
+      "name": "Japanese maple",
+      "variety": null,
+      "category": "tree",
+      "location": "Back yard (in ground)",
+      "quantity": 1,
+      "method": "established",
+      "plan": {},
+      "profile": {
+        "summary": "In Pasadena this tree is at the hot, dry, alkaline edge of its range, so it most needs afternoon shade, shelter from hot dry wind, and steady deep moisture under a 3-inch mulch. The other chronic problems are salt build-up from very hard tap water (brown leaf edges) and iron/manganese lock-up in alkaline soil (yellow leaves with green veins), so feed very lightly and leach the root zone now and then.",
+        "seedPrep": null,
+        "sowing": "",
+        "germination": null,
+        "indoorWeeks": null,
+        "hardenOffDays": null,
+        "windows": [],
+        "daysToMaturity": null,
+        "harvestWeeks": null,
+        "harvestNotes": "",
+        "harvestSeason": null,
+        "harvest": null,
+        "succession": null,
+        "fertilizer": [
+          {
+            "label": "Light spring feed (optional)",
+            "product": "Organic slow-release acid-forming fertilizer (azalea/camellia or Japanese maple type, e.g. 4-8-5 or 5-5-5); keep nitrogen low",
+            "amount": "Go light: no more than half the label rate for a small tree, scattered under the canopy and watered in. Sources give no exact amount for a 6 ft tree.",
+            "start": "calendar",
+            "dates": [
+              "03-15"
+            ],
+            "notes": "Optional. UC IPM does not recommend fertilizing established woody plants unless a deficiency is shown, and says to minimize fertilizer where salts are a problem; Sunset and specialist nurseries suggest one light feed as new growth emerges. Skip it if growth and leaf color are good. Never feed during heat or after June 1. The mid-March date is adapted to Pasadena leaf-out (nurseries in colder areas say late April)."
+          },
+          {
+            "label": "Iron/manganese chelate - only if leaves yellow between green veins",
+            "product": "Chelated iron and/or manganese micronutrient product",
+            "amount": "Per product label (foliar spray on new leaves or soil drench as the label directs)",
+            "start": "calendar",
+            "dates": [
+              "04-15"
+            ],
+            "notes": "Only if leaves yellow between green veins. UC IPM: chelates are a quick, temporary fix; the lasting remedy is composted mulch over the roots, less frequent but deep irrigation, good drainage, and lowering pH (for established plants, 2-3 teaspoons of elemental sulfur mixed into soil in holes dug around the drip line; sulfur works slowly and poorly in soils high in lime). Too much manganese is toxic, so do not exceed the label."
+          },
+          {
+            "label": "Refresh mulch",
+            "product": "Composted organic mulch / wood chips (not gravel)",
+            "amount": "Top up to a 3-inch layer over the root zone, pulled back several inches from the trunk",
+            "start": "calendar",
+            "dates": [
+              "05-01"
+            ],
+            "notes": "Do it before summer heat. Mulch keeps roots cool, holds moisture, and reduces the surface evaporation that concentrates salts."
+          },
+          {
+            "label": "Deep leaching irrigation (flush salts)",
+            "product": "Plain water, slow and long (no fertilizer)",
+            "amount": "Run a slow soak well past a normal watering so water moves salts below the root zone; then let the soil drain before the next irrigation",
+            "start": "calendar",
+            "dates": [
+              "06-15",
+              "09-01"
+            ],
+            "notes": "Sunset: occasional flooding of the soil helps leach out salts; UC IPM: leach by applying more water than is needed to wet the root zone, irrigating longer and less often rather than more often. Skip if soil is already wet or drains poorly (root rot risk). Winter rain does this job for free in wet years. Dates are a scheduling choice, not from a source."
+          }
+        ],
+        "water": "Deep and infrequent rather than shallow and often. Roughly: summer and early autumn (Jun-Oct) a long, slow soak every 7-10 days, tightening to about twice a week during heat waves and Santa Ana wind events; spring and late autumn about every 10-14 days if there is no rain; winter (leafless) only during long dry spells. Wet the whole root zone under and just beyond the canopy, then let the top few inches dry slightly. Check soil before watering: overwatering and soggy soil kill more Japanese maples than drought. Water at soil level (drip or soaker), not with sprinklers on the leaves, because salty water burns foliage.",
+        "sun": "Morning sun with afternoon shade, or filtered shade all day; north or east side of the house or under high tree canopy is ideal. Shelter from hot, dry or constant wind. Full afternoon sun inland will scorch leaves every summer.",
+        "spacing": "Species grows slowly to about 20 ft tall with an equal or greater spread (many cultivars stay 6-15 ft). Allow roughly 10 ft of clearance from walls and other trees; roots are shallow, fibrous and non-aggressive.",
+        "soil": "Prefers well-drained but moisture-retentive soil, slightly acidic at pH 5.5-6.5. Pasadena soil and water are alkaline: iron deficiency shows above about pH 7.0-7.5. Do not dig around the roots of an established tree; instead keep a permanent composted mulch, use acid-forming organic fertilizer if you feed at all, consider small pockets of elemental sulfur at the drip line, and avoid waterlogging, which worsens both chlorosis and root rot.",
+        "frostTenderBelowF": 32,
+        "heatStressAboveF": 95,
+        "pests": [
+          "Leaf scorch (abiotic; the main problem here) - brown, crispy leaf edges and tips from heat, dry air, hot wind or dry soil. Give afternoon shade and wind shelter, deep water before forecast heat or Santa Anas, keep 3 inches of mulch. Scorched leaves do not recover but the tree usually does.",
+          "Salt burn from hard tap water or fertilizer - browning that starts at tips and margins of older leaves. Leach with a long slow soak, keep sprinklers off the foliage, mulch, and minimize fertilizer.",
+          "Iron/manganese chlorosis in alkaline soil - new leaves yellow or pale with green veins. Mulch with compost, water less often but deeply, apply chelate per label as a temporary fix.",
+          "Verticillium wilt - sudden wilting and browning of one branch or one side, dark streaks in the wood. No cure; prune out dead branches, keep the tree vigorous and evenly watered, do not replant susceptible plants in the same spot.",
+          "Phytophthora root and crown rot - decline and dieback in wet, poorly drained soil. Prevent by not overwatering, keeping mulch off the trunk, and never burying the root crown.",
+          "Spider mites - stippled, dusty-looking leaves in hot dry weather. Hose off foliage (early morning) and keep the tree from drought stress; avoid broad-spectrum sprays.",
+          "Aphids and soft scales - sticky honeydew, sooty mold, ants on the trunk. Hose off aphids, control ants, and use horticultural oil on scale crawlers only if heavy.",
+          "Sunburn of bark and exposed limbs - cracked or dead bark on the south/west side after heavy pruning or loss of shade. Do not open up the canopy in summer.",
+          "Powdery mildew, anthracnose and leaf spots - occasional and cosmetic; rake up fallen leaves, no spray needed."
+        ],
+        "companions": [],
+        "avoidNear": [],
+        "notes": "Cultivar unknown, so this profile is for the species Acer palmatum in general; red-leaf and lace-leaf (dissectum) types usually scorch more easily than green upright types, and mature size varies widely by cultivar. Treated as an established in-ground tree in native alkaline soil. PRUNING WINDOW (Pasadena): do structural pruning while the tree is fully leafless and dormant, about Dec 15 - Jan 31, before buds swell in February; maples bleed sap if cut as sap rises in late winter/early spring, and tender new bark tears easily then. Light thinning or removal of water sprouts is fine in early summer (June), but do not open the canopy or prune hard in the heat of Jul-Oct (bark sunburn, Santa Ana stress). Never remove more than about 20% of the canopy in a year; dead wood can come out any time. Sources disagree: Sunset says prune in summer or early fall in mild-winter areas to limit sap bleed, and Mendocino Maples says mid-July through August; Pacific Horticulture and Mr Maple say winter dormancy for structural work and to avoid the full heat of summer. The winter window above is the more conservative reading for inland heat. FROST: the dormant tree is fully hardy to anything Pasadena gets; 32 F matters only after leaf-out (roughly late Feb-Apr), when a freeze can kill new growth - drape with a sheet or frost cloth overnight. HEAT: the alert threshold is set at 95 F, a practical level for Pasadena that is not from a source; 85 F is a general onset-of-heat-stress figure for landscape trees and shrubs from Rutgers (New Jersey), the only sourced number found; in Pasadena it will be exceeded most days Jun-Oct. WATER: Pasadena Water and Power reports average hardness of 12.9 grains per gallon ('very hard'). Unverified: no source gave a Japanese-maple-specific heat threshold; a practical alert level here may be nearer 95 F. Unverified: exact watering depth in inches and gallons per watering for a 6 ft tree (sources say only 'deep' and 'whole root zone'); the seasonal intervals outside summer are extrapolated from the 7-10 day established-tree figure. Unverified: fertilizer amount for a 6 ft tree, and the specific calendar dates for feeding (03-15), chelate (04-15), mulch (05-01) and leaching (06-15, 09-01), which are scheduling choices fitted to Pasadena, not source dates. Unverified: the Dec 15 - Jan 31 dormancy dates for Pasadena are an inference from local leaf-drop timing. Unverified: whether chlorine/chloramine in Pasadena tap water harms Japanese maples (PWP says only that chlorine and chloramine are used as disinfectants); the documented water problem is hardness and salts. Unverified: which chelate form (e.g. EDDHA) works best at this soil pH - UC IPM says only to follow the label. Unverified: gypsum top-dressing for salts (Roger's Gardens recommends it; UC IPM says amendments cannot fix saline soil and gypsum helps only sodic soil - get a soil test first). Unverified: invasive shot hole borer risk to this tree in the San Gabriel Valley was not checked. Not opened: Cal Poly SelecTree (needs JavaScript) and Missouri Botanical Garden Plant Finder (blocked), so no data is taken from them. Watering schedule: the calendar uses 10-14 days for Mar-May and November, 7-10 days for Jun-Oct, and nothing from December to February (water only in long dry spells). The month boundaries are a reading of the 'water' text, which says spring, summer to early autumn and late autumn without dates.",
+        "sources": [
+          {
+            "title": "Acer palmatum (Japanese Maple) - Sunset Plant Finder",
+            "url": "https://sunset.com/garden/flowers-plants/plant-finder-Acer-palmatum-japanese-maple"
+          },
+          {
+            "title": "Japanese maples - Sunset Magazine",
+            "url": "https://sunset.com/garden/flowers-plants/japanese-maples"
+          },
+          {
+            "title": "Maple / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+            "url": "https://ipm.ucanr.edu/PMG/GARDEN/PLANTS/maple.html"
+          },
+          {
+            "title": "Nutrient and Mineral Excesses, Salinity, and Salt Toxicity - UC IPM",
+            "url": "https://ipm.ucanr.edu/PMG/GARDEN/ENVIRON/salttoxicity.html"
+          },
+          {
+            "title": "Nutrient Deficiencies / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+            "url": "https://ipm.ucanr.edu/home-and-landscape/nutrient-deficiencies/"
+          },
+          {
+            "title": "Iron Deficiency - UC IPM",
+            "url": "https://ipm.ucanr.edu/home-and-landscape/iron-deficiency/"
+          },
+          {
+            "title": "Manganese Deficiency - UC IPM",
+            "url": "https://ipm.ucanr.edu/home-and-landscape/manganese-deficiency/"
+          },
+          {
+            "title": "Verticillium Wilt / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+            "url": "https://ipm.ucanr.edu/home-and-landscape/verticillium-wilt/"
+          },
+          {
+            "title": "Japanese Maple Placement and Care - UC Master Gardeners of Placer County",
+            "url": "https://ucanr.edu/node/164196"
+          },
+          {
+            "title": "Leaf Scorch on Japanese Mapel - UC Cooperative Extension Ventura County",
+            "url": "https://ucanr.edu/node/125746"
+          },
+          {
+            "title": "Everything You Want to Know About Growing Japanese Maples - Roger's Gardens",
+            "url": "https://www.rogersgardens.com/blogs/current-news-events/everything-you-want-to-know-about-growing-japanese-maples"
+          },
+          {
+            "title": "Revealing the 'Essence of the Tree': Aesthetic Pruning of Japanese Maples - Pacific Horticulture",
+            "url": "https://pacifichorticulture.org/?p=1768"
+          },
+          {
+            "title": "Japanese Maple Care Guide - Planting, Watering, Pruning & Fertilizing - Mendocino Maples Nursery",
+            "url": "https://mendocinomaples.com/pages/japanese-maple-care"
+          },
+          {
+            "title": "Japanese Maple Spring Weather Protection: Frost, Wind & Snow - Mendocino Maples Nursery",
+            "url": "https://mendocinomaples.com/pages/japanese-maple-spring-weather-protection-frost-wind-snow"
+          },
+          {
+            "title": "Japanese Maple Care Guide - Mr Maple",
+            "url": "https://mrmaple.com/pages/japanese-maple-care-guide"
+          },
+          {
+            "title": "Managing Heat Stress in Nursery and Landscape Plants - Rutgers Plant & Pest Advisory",
+            "url": "https://plant-pest-advisory.rutgers.edu/tag/leaf-scorch/"
+          },
+          {
+            "title": "Acer palmatum 'Burgundy Lace': 'Burgundy Lace' Japanese Maple (ENH-184) - UF/IFAS",
+            "url": "https://ask.ifas.ufl.edu/publication/ST025/pdf"
+          },
+          {
+            "title": "Water Quality FAQs - Pasadena Water and Power",
+            "url": "https://pwp.cityofpasadena.net/waterqualityfaqs/"
+          }
+        ],
+        "watering": [
+          {
+            "start": "03-01",
+            "end": "05-31",
+            "everyDays": [
+              10,
+              14
+            ],
+            "amount": "Long, slow soak of the whole root zone",
+            "notes": "Skip if it has rained. Check that the top few inches have dried first."
+          },
+          {
+            "start": "06-01",
+            "end": "10-31",
+            "everyDays": [
+              7,
+              10
+            ],
+            "amount": "Long, slow soak of the whole root zone",
+            "notes": "About twice a week during heat waves and Santa Ana winds. Water at soil level, not on the leaves."
+          },
+          {
+            "start": "11-01",
+            "end": "11-30",
+            "everyDays": [
+              10,
+              14
+            ],
+            "amount": "Long, slow soak of the whole root zone",
+            "notes": "Skip if it has rained."
+          }
+        ]
+      },
+      "id": "japanese-maple",
+      "actual": {},
+      "done": [],
+      "addedOn": "2026-11-19"
+    },
+    {
+      "name": "Longan",
+      "variety": null,
+      "category": "fruit tree",
+      "location": "Back yard (in ground)",
+      "quantity": 1,
+      "method": "established",
+      "plan": {},
+      "profile": {
+        "summary": "In Pasadena this young longan most needs steady deep watering through the hot dry season, shelter from hot dry Santa Ana winds and frost while small, and ongoing iron/manganese/zinc correction because it prefers acidic soil and is sitting in alkaline soil with alkaline water. Feed lightly from spring through midsummer, stop nitrogen after August, and expect fruit (once the tree is old enough) to ripen in autumn, much later than in Florida.",
+        "seedPrep": null,
+        "sowing": "",
+        "germination": null,
+        "indoorWeeks": null,
+        "hardenOffDays": null,
+        "windows": [],
+        "daysToMaturity": null,
+        "harvestWeeks": 4,
+        "harvestNotes": "Longan does not sweeten or ripen after picking, so judge by taste, not date. Ripe fruit has turned from greenish to an intense tan, has reached full size (UF/IFAS: about 1 1/4 in. for good Kohala fruit; UC Ventura gives 0.5-1 in. in California), and the pulp is fully sweet. Taste-test one or two fruit from a cluster before cutting it. On a given tree the crop comes in over about 3-4 weeks. In cool-autumn years coastal Southern California growers report fruit that never fully sweetens; Pasadena's hotter inland summer should help.",
+        "harvestSeason": {
+          "start": "09-15",
+          "end": "11-15"
+        },
+        "harvest": {
+          "steps": [
+            "Taste-test a fruit from each cluster first: the skin should be tan and the pulp fully sweet. Partly ripe fruit will not ripen off the tree.",
+            "Cut the whole cluster (panicle) with hand pruners or a pole cutter rather than pulling single fruit; on a bearing-size tree UF/IFAS cuts about 1 ft of branch behind the panicle, on a small tree cut just behind the cluster to keep more wood.",
+            "Do not pull or twist fruit off the stem (it tears the skin); clip individual fruit from the cluster afterwards if wanted.",
+            "Move picked clusters into shade straight away and cool them; refrigerated in a plastic bag they keep about 5-7 days."
+          ],
+          "firstCutWhen": "Skin intense tan (no green), fruit full size, and a sampled fruit tastes fully sweet",
+          "takeAtMost": "All ripe clusters; leave clusters that still taste bland and re-test weekly",
+          "regrowDays": null,
+          "maxCuts": null,
+          "replaceWhen": ""
+        },
+        "succession": null,
+        "fertilizer": [
+          {
+            "label": "Young-tree feeding",
+            "product": "Balanced young-tree/citrus-type granular such as 6-6-6 (or 8-3-9), ideally with 20-30% of nitrogen from organic sources",
+            "amount": "About 0.5-0.75 lb per application for a 4 ft tree (UF/IFAS year 2-3 rate; total 2-5 lb per year), scattered under and just beyond the canopy and watered in",
+            "start": "calendar",
+            "dates": [
+              "03-15",
+              "05-01",
+              "06-15",
+              "08-01"
+            ],
+            "notes": "Rates are from the UF/IFAS Florida table (4-5 applications/yr in years 2-3); dates shifted to Pasadena's March-August growth period. No nitrogen after August: UF/IFAS says late nitrogen keeps the tree growing into winter and reduces spring flowering on bearing-age trees, and soft late growth is also more frost-prone. UC Ventura notes manure/compost is a workable alternative in California but gives no rates."
+          },
+          {
+            "label": "Iron chelate drench",
+            "product": "Fe-EDDHA iron chelate (the chelate form that stays available above pH 7.5), as a soil drench",
+            "amount": "About 0.5 oz (14 g) dissolved in 4-5 gallons of water, poured on the soil around the base of the trunk; keep the yearly total near 1-1.5 oz for a tree this size",
+            "start": "calendar",
+            "dates": [
+              "04-15",
+              "06-15",
+              "08-15"
+            ],
+            "notes": "UF/IFAS: on alkaline soil drench with iron chelate 2-3 times a year (their window is June-September; 0.5-0.75 oz in 4-5 gal; young-tree yearly total 0.75-1.5 oz). First date moved earlier to catch the spring flush, as USU advises for chelates. UF/IFAS does not name EDDHA; that choice is from USU. Skip a drench if new leaves are solid green."
+          },
+          {
+            "label": "Micronutrient foliar spray",
+            "product": "Chelated/minor-element foliar mix with manganese and zinc (plus magnesium, boron, molybdenum if included), mixed at the product label rate",
+            "amount": "Label rate; spray new and nearly expanded leaves to wetting (a small hand sprayer is plenty for a 4 ft tree)",
+            "start": "calendar",
+            "dates": [
+              "04-20",
+              "06-01",
+              "09-01"
+            ],
+            "notes": "UF/IFAS young-tree table calls for 3 minor-element sprays a year, within April-September; it gives no per-tree amount. Spray in the cool of early morning, not during a heat wave or Santa Ana wind. Foliar correction is temporary; repeat on new flushes."
+          }
+        ],
+        "water": "No source gives gallons or intervals for California, so the frequencies here are starting points to adjust by checking soil moisture. UC Ventura rates longan's water need as lower than lychee and about the same as a lemon tree; UC says it tolerates dry soil but not waterlogged soil or salty water. For this young tree: water deeply enough to wet the full root zone and a little beyond the canopy, then let the top few inches dry before watering again (roughly weekly in spring and autumn, every 3-5 days in summer heat, more often during 100F+ spells or Santa Ana winds; little or none in a wet winter, about every 2-3 weeks in a dry one). Staying constantly wet in alkaline soil makes iron chlorosis worse. Keep 3-4 in. of mulch over the root zone, pulled back from the trunk, and leach with an occasional extra-deep soak since longan is salt-sensitive. Once the tree is bearing age, UF/IFAS (Florida) recommends cutting water back in autumn through winter to check growth and promote bloom, then watering regularly from bloom until harvest; do not drought-stress a young non-bearing tree in Pasadena's dry autumn.",
+        "sun": "Full sun (at least 6-8 hours). While small, give it afternoon shade cloth and wind shelter during extreme heat or hot dry winds; UC advises protecting young trees from heat and from hot, dry wind.",
+        "spacing": "15-25 ft tall in California (to 50 ft in ideal climates; 30-40 ft tall and wide in south Florida). Allow 15-25 ft between tree centres per UC (UC Master Gardener article: at least 20 ft; UF/IFAS: 22-25 ft from trees and structures). Can be held to about 10-15 ft tall by pruning after harvest.",
+        "soil": "Does best in rich, well-drained soil on the acidic side (a nursery guide gives pH 5.5-7.0; UC and UF/IFAS give no number). It will not tolerate flooding or saline soil/water. In Pasadena's alkaline soil and water expect recurring iron, manganese and zinc deficiency (yellow new leaves with green veins): do not try to re-acidify the whole yard; instead mulch with organic matter, avoid overwatering, drench with Fe-EDDHA chelate, and apply manganese/zinc as foliar sprays.",
+        "frostTenderBelowF": 32,
+        "heatStressAboveF": 100,
+        "pests": [
+          "Iron/manganese/zinc chlorosis from alkaline soil and water (the main problem here, already seen on this tree) - Fe-EDDHA drenches plus Mn/Zn foliar sprays on the fertilizer calendar; avoid keeping the soil wet.",
+          "Leaf-tip and margin burn from hot dry wind, heat waves or salt build-up - water deeply before heat and Santa Anas, shade the young tree, mulch, and leach salts with occasional long soaks.",
+          "Frost damage on young trees (severe at 29-31F) - cover with frost cloth to the ground on nights forecast near freezing and water the day before.",
+          "Scale insects (listed for Florida; soft scales with ants are plausible here) - check twigs and leaf undersides, control ants, and treat only heavy infestations, e.g. with horticultural oil.",
+          "Birds and other wildlife on ripening fruit - bag or net clusters once fruit starts to colour.",
+          "Root rot in waterlogged soil - let the soil dry between waterings and never let water stand around the trunk."
+        ],
+        "companions": [],
+        "avoidNear": [],
+        "notes": "Cultivar unknown (Kohala is the most common longan in California and the only one in UC's subtropical variety list, harvest listed simply as 'Fall'; Diamond River is the other commonly grown in Southern California). A 4 ft tree may be several years from fruiting: air-layered trees bear about 2-3 years after planting (UC Ventura says 3-5 years), seedlings up to 6 years, and Kohala bears erratically even when mature. Cold: UF/IFAS gives severe damage to young trees at 29-31F and possible death at 26-28F; mature trees are injured at 25-26F (UC: hardened mature trees survive about 22F briefly), so frostTenderBelowF is set at 32F as the protect-by temperature. Pruning: minimal; tip young shoots 1-2 in. once or twice in spring/summer to build branching, and do any size-control pruning right after harvest - UF/IFAS warns that autumn/winter pruning reduces spring bloom, but in Pasadena harvest ends in autumn, so if harvest runs late just remove dead wood and leave shaping until after the next harvest or do it in late spring on a non-bearing tree. Florida-derived numbers (UF/IFAS): all fertilizer rates and frequencies, iron chelate amounts, minor-element spray counts, cold damage temperatures, the autumn nitrogen/water cut-off, fruit size, storage life, and the 'cut 1 ft behind the panicle' rule; Florida harvest is mid-July to early September and does NOT apply here. California-derived: tree size, spacing, water need relative to lemon, 'acidic side' soil preference, late July-December harvest range, Kohala = fall. harvestSeason 09-15 to 11-15 is an estimate for inland Southern California built from UC's 'Fall' for Kohala, UC Ventura's late July-December range, and one south Orange County grower reporting late September in a warm year and later in normal years. Unverified: the exact flowering period in Southern California (sources consulted give none; expected late spring). Unverified: heatStressAboveF of 100F is not a longan-specific figure - sources only say young trees need protection from heat and hot dry wind; 100F follows general Southern California heat-wave guidance. Unverified: watering intervals (no source gives them). Unverified: numeric soil pH range comes from a nursery guide only. Unverified: California-specific insect pests - UC Ventura says longan should be essentially pest-free in California; UC IPM has no longan page that was found. Unverified: the California Rare Fruit Growers longan fruit-facts page could not be opened (site error), so nothing is cited from it. Watering schedule: the calendar uses weekly for Mar-May and Oct-Nov, every 3-5 days for Jun-Sep and every 2-3 weeks for Dec-Feb, taken from the 'water' text, whose intervals are starting points and not from a source.",
+        "sources": [
+          {
+            "title": "FC49/MG049: Longan Growing in the Florida Home Landscape (UF/IFAS)",
+            "url": "https://ask.ifas.ufl.edu/publication/MG049"
+          },
+          {
+            "title": "Longan (UC Cooperative Extension Ventura County, Minor Subtropicals)",
+            "url": "https://ucanr.edu/node/125813"
+          },
+          {
+            "title": "Growing Longan in Southern California (UC ANR, Topics in Subtropics)",
+            "url": "https://ucanr.edu/node/111800"
+          },
+          {
+            "title": "Citrus and Other Subtropicals - fruit variety table (UC Cooperative Extension Ventura County)",
+            "url": "https://ucanr.edu/node/125819"
+          },
+          {
+            "title": "California Dragon Eye (longan) fruit - PalmTalk forum thread",
+            "url": "https://www.palmtalk.org/forum/topic/75557-california-dragon-eye-longan-fruit"
+          },
+          {
+            "title": "Iron Chlorosis | USU",
+            "url": "https://extension.usu.edu/planthealth/ipm/notes_orn/list-treeshrubs/iron-chlorosis"
+          },
+          {
+            "title": "Growing Guide: Longan (Sow Exotic)",
+            "url": "https://sowexotic.com/pages/longan-plant-care"
+          },
+          {
+            "title": "Caring for your Southern California garden during a heat wave (Greg Alder's Yard Posts)",
+            "url": "https://gregalder.com/yardposts/?p=3878"
+          }
+        ],
+        "watering": [
+          {
+            "start": "03-01",
+            "end": "05-31",
+            "everyDays": 7,
+            "amount": "Deep watering of the full root zone",
+            "notes": "Let the top few inches dry first."
+          },
+          {
+            "start": "06-01",
+            "end": "09-30",
+            "everyDays": [
+              3,
+              5
+            ],
+            "amount": "Deep watering of the full root zone",
+            "notes": "More often in 100°F+ spells or Santa Ana winds."
+          },
+          {
+            "start": "10-01",
+            "end": "11-30",
+            "everyDays": 7,
+            "amount": "Deep watering of the full root zone",
+            "notes": "Let the top few inches dry first."
+          },
+          {
+            "start": "12-01",
+            "end": "02-28",
+            "everyDays": [
+              14,
+              21
+            ],
+            "amount": "Deep watering of the full root zone",
+            "notes": "Dry winters only. Skip if it has rained."
+          }
+        ]
+      },
+      "id": "longan",
+      "actual": {},
+      "done": [],
+      "addedOn": "2026-11-19"
+    },
+    {
+      "name": "Lime",
+      "variety": null,
+      "category": "fruit tree",
+      "location": "Back yard (in ground)",
+      "quantity": 1,
+      "method": "established",
+      "plan": {},
+      "profile": {
+        "summary": "A young in-ground lime in Pasadena most needs deep, regular summer irrigation (more often in 95°F+ heat and Santa Ana winds), a whitewashed trunk, and modest nitrogen split across February, May and June, with a chelated micronutrient spray on the spring flush if alkaline soil yellows the new leaves. Limes are among the least cold-hardy citrus, so cover it on the rare nights forecast near 30°F, and check new flush monthly for Asian citrus psyllid because Los Angeles County has huanglongbing.",
+        "seedPrep": null,
+        "sowing": "",
+        "germination": null,
+        "indoorWeeks": null,
+        "hardenOffDays": null,
+        "windows": [],
+        "daysToMaturity": null,
+        "harvestWeeks": null,
+        "harvestNotes": "Bearss limes are full size at about 2 to 2.5 inches across with a thin, smooth rind. They are normally picked green; if left, the rind turns light yellow at full maturity (usually late autumn to early winter) and the fruit then drops, so a yellow lime is fully ripe, not spoiled. Citrus does not improve after picking, so judge by cutting one open: it should be juicy and sharply acidic. UC Riverside lists the season of ripeness at Riverside as October to December, while UC Master Gardeners of San Diego list Bearss harvest as August through March; the tree is somewhat everbearing, so a few fruit can be found outside the main season. Picked fruit keeps about 4 to 6 weeks refrigerated and the juice can be frozen for up to 4 months.",
+        "harvestSeason": {
+          "start": "08-01",
+          "end": "03-31"
+        },
+        "harvest": {
+          "steps": [
+            "Pick full-size green fruit (about 2 to 2.5 inches across) as needed; cut one open first to confirm it is juicy.",
+            "Clip the fruit off with hand pruners, leaving the small button on the fruit, rather than pulling, so the rind does not tear and twigs do not break.",
+            "Pick everything that has turned yellow promptly, because fully mature Bearss limes drop from the tree.",
+            "If frost is forecast, pick ripe fruit beforehand; fruit is damaged below about 30°F.",
+            "Because Los Angeles County has huanglongbing quarantine areas, only share fruit that is washed and free of stems and leaves, and do not take cuttings, leaves or budwood off the property."
+          ],
+          "firstCutWhen": "Fruit is full size (about 2 to 2.5 inches across), smooth-skinned and juicy when cut, still green or just starting to lighten.",
+          "takeAtMost": "All fruit that is full size; green fruit can be left on the tree and picked as needed, but pick before or as soon as it turns yellow because fully mature fruit drops.",
+          "regrowDays": null,
+          "maxCuts": null,
+          "replaceWhen": ""
+        },
+        "succession": null,
+        "fertilizer": [
+          {
+            "label": "Nitrogen",
+            "product": "Nitrogen fertilizer such as ammonium sulfate (21-0-0) or a citrus food",
+            "amount": "Annual total 0.25 lb actual nitrogen in the tree's 2nd year in the ground, 0.5 lb in the 3rd year (about 1.25 to 2.5 lb ammonium sulfate per year), split into three equal feedings: roughly 0.4 lb ammonium sulfate per feeding in year 2, 0.8 lb per feeding in year 3.",
+            "start": "calendar",
+            "dates": [
+              "02-01",
+              "05-01",
+              "06-01"
+            ],
+            "notes": "UC IPM schedule: divide the yearly nitrogen into 2 or 3 applications, the first in January or February just before bloom, the second in May, and possibly a third in June. Rises to 0.75 lb nitrogen in year 4 and 1 lb per year from year 5. Spread evenly under and just beyond the canopy, not piled at the trunk, and water in. No nitrogen in late summer, autumn or winter: late feeding roughens rind and delays colour, pushes frost-tender growth, and summer/fall flush is what citrus leafminer attacks. UC Master Gardeners of San Diego instead give four feedings 4 to 6 weeks apart starting in February (0.5 cup ammonium sulfate each in year 2, 1 cup each in year 3). Tree age is unknown; a 4 ft tree is assumed to be in its 2nd or 3rd year."
+          },
+          {
+            "label": "Micronutrient foliar spray",
+            "product": "Liquid chelated micronutrient spray containing zinc and iron (many citrus blends also include manganese)",
+            "amount": "Mix at label rate and wet the new leaves thoroughly.",
+            "start": "calendar",
+            "dates": [
+              "03-15",
+              "04-15"
+            ],
+            "notes": "Only if needed: use when new leaves show yellowing between green veins (zinc, iron or manganese deficiency, common where soil is above pH 7). UC IPM says to apply as new growth emerges in spring; UC Cooperative Extension Ventura notes two or more sprays may be needed in the first year, hence the optional second date. Soil alternative: zinc sulfate or iron sulfate. Skip if foliage is evenly green. The exact dates are an estimate of spring flush timing in Pasadena; spray when the flush is actually expanding. Blotchy, lopsided yellowing is not a nutrient problem; see the huanglongbing pest entry."
+          }
+        ],
+        "water": "Water deeply and infrequently, keeping the trunk dry. Spring to autumn: a thorough soak every 7 to 14 days for an established young tree, about every 7 to 10 days in midsummer; citrus uses roughly 4 to 6 inches of water a month in the warm season. Heat spikes: deep water at least a day before several days of 95 to 100°F are forecast, then check the top 3 to 4 inches of soil and water when dry, as often as every 3 to 4 days. Aim to wet the soil to about 3 feet as the tree matures, and move emitters outward as roots spread. Winter: water only when the soil a few inches down has dried and rain has not done the job. Overwatering causes root and crown rot; underwatering causes small fruit, leaf drop and sunburn. Mulch helps, kept back from the trunk.",
+        "sun": "Full sun for most of the day (at least 8 hours), in a spot sheltered from strong wind.",
+        "spacing": "Bearss is a vigorous, spreading, medium-large tree, about 10 to 15 ft tall in the ground. Keep lawn and frequently watered plants away; a turf-free area of about 6 ft around the trunk is recommended.",
+        "soil": "Well-drained soil; ideal pH about 6.0 to just under 7.0. Above pH 7.5 (typical of Pasadena soil and tap water) iron, zinc and manganese become less available and new leaves yellow between green veins. Respond with a chelated zinc/iron foliar spray on the spring flush or soil-applied zinc sulfate or iron sulfate, use an acidifying nitrogen source such as ammonium sulfate, and avoid waterlogging, which also causes iron deficiency.",
+        "frostTenderBelowF": 30,
+        "heatStressAboveF": 95,
+        "pests": [
+          "Asian citrus psyllid and huanglongbing (HLB, citrus greening): the psyllid spreads an incurable bacterial disease first found in California in a Los Angeles County home garden in 2012. Inspect new flush monthly from spring through fall with a hand lens for yellow-orange nymphs trailing curly white waxy tubules, tiny yellow eggs in leaf folds, and brown-mottled adults feeding head-down at about a 45-degree angle. HLB shows as blotchy yellowing that is uneven across the leaf midrib or confined to one limb (nutrient deficiency is symmetrical), plus small, lopsided, bitter fruit. Report suspected psyllids or HLB to the CDFA Exotic Pest Hotline, 1-800-491-1899, or the Los Angeles County agricultural commissioner. Do not move citrus plants, cuttings, leaves or budwood off the property; fruit may be shared only washed and free of stems and leaves. Buy any new citrus from a reputable local nursery and cooperate with CDFA inspection, treatment or removal.",
+          "Ants (especially Argentine ants): they farm honeydew from psyllids and protect them from the parasitic wasp Tamarixia radiata and other natural enemies. Keep ants from climbing the trunk and keep branches from touching fences or other plants.",
+          "Citrus leafminer: silvery, winding mines and curled new leaves on summer and fall flush. Young trees are the most affected but are unlikely to die. Leave mined leaves on, do not feed nitrogen in summer or fall, prune live wood no more than once a year, and remove vigorous water sprouts. Spraying is rarely worthwhile; spinosad on new flush is the option for a very young tree.",
+          "Root and crown rot: caused by overwatering, a wet trunk, or soil piled against the trunk. Water deeply but infrequently, keep the trunk dry and the base weed-free.",
+          "Sunburn and heat injury: trunk and exposed limbs of young trees burn in hot, dry weather, worse in dry soil; Santa Ana conditions can also cause leaf and fruit drop. Whitewash the trunk and water ahead of heat.",
+          "Wood pocket: a genetic disorder that UC Riverside says is carried by all known Persian (Bearss) lime trees and can seriously harm the tree; there is no treatment."
+        ],
+        "companions": [],
+        "avoidNear": [],
+        "notes": "Variety unknown; this profile assumes Bearss (Persian/Tahiti) lime, Citrus x latifolia, the usual lime in Southern California gardens. Telling them apart: Bearss fruit is about 2 to 2.5 inches, seedless, on a nearly thornless, vigorous spreading tree; Mexican (Key) lime fruit is about 1.5 inches, round, seedy, on a bushy, almost shrub-like tree that is usually quite thorny (thornless selections exist). If it proves to be Mexican lime: it is very sensitive to cold, noticeably more so than Bearss (UC Riverside says Bearss does well wherever lemons do), so protect it at 32°F rather than 30°F; UC Riverside gives the same October to December ripening season for it. Frost: UC Master Gardeners of Sacramento list limes as damaged at 29°F and say to cover young trees and limes at 29°F and switch on heat-giving (non-LED) lights at 32°F; Four Winds Growers says protect Bearss below 30°F; UC Master Gardeners of San Diego say young trees can be injured below 29°F. 30 is used as the threshold. Cover before sunset with cloth on a frame, not plastic touching leaves, water beforehand, uncover on sunny days, and wait until spring to prune frost damage. Pruning: young citrus needs very little; remove suckers below the graft union any time, and do other pruning once a year in late winter just before bloom or just after fruit set. Avoid summer pruning (sunburn) and late-season pruning (frost-tender regrowth). Trunk sunburn: paint the trunk and any exposed limbs with white interior latex paint diluted 1:1 with water, and keep low branches to shade the trunk. Heat: the 95°F threshold comes from UC Master Gardener advice to deep water before several days of 95 to 100°F. Unverified: whether this address lies inside a current CDFA huanglongbing quarantine boundary (HLB quarantine areas exist in Los Angeles County; check CDFA's quarantine maps). Unverified: the tree's age, which sets the nitrogen amount (0.25 lb assumed for year 2, 0.5 lb for year 3). Unverified: exact spring flush dates for the micronutrient spray in Pasadena (03-15 and 04-15 are estimates). Unverified: how many weeks green Bearss fruit holds on the tree; sources say only that it stores well on the tree and drops once fully yellow. Unverified: the clip-rather-than-pull picking method and 'slight give' ripeness tests are common practice, not from a UC page opened for this research. Unverified: a winter watering interval; UC sources give only warm-season figures. Watering schedule: the calendar uses 7-14 days for Mar-May and Oct-Nov, 7-10 days for Jun-Sep, and nothing from December to February (water only when the soil has dried and it has not rained). The month boundaries are a reading of the 'water' text, which says spring to autumn and midsummer without dates.",
+        "sources": [
+          {
+            "title": "Fertilizing Citrus / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+            "url": "https://ipm.ucanr.edu/home-and-landscape/fertilizing-citrus/"
+          },
+          {
+            "title": "Cultural Tips for Growing Citrus / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+            "url": "https://ipm.ucanr.edu/home-and-landscape/cultural-tips-for-growing-citrus/"
+          },
+          {
+            "title": "Asian Citrus Psyllid and Huanglongbing Disease / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+            "url": "https://ipm.ucanr.edu/home-and-landscape/asian-citrus-psyllid-and-huanglongbing-disease/"
+          },
+          {
+            "title": "Pest Notes: Asian Citrus Psyllid and Huanglongbing Disease (UC ANR, PDF)",
+            "url": "https://ipm.ucanr.edu/legacy_assets/PDF/PESTNOTES/pnasiancitruspsyllid.pdf"
+          },
+          {
+            "title": "Citrus Leafminer / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+            "url": "https://ipm.ucanr.edu/home-and-landscape/citrus-leafminer/"
+          },
+          {
+            "title": "Sunburn / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+            "url": "https://ipm.ucanr.edu/home-and-landscape/sunburn/"
+          },
+          {
+            "title": "Bearss lime, Citrus latifolia (CRC 3772) - UC Riverside Citrus Variety Collection",
+            "url": "https://citrusvariety.ucr.edu/crc3772"
+          },
+          {
+            "title": "Tahiti lime (CRC 391) - UC Riverside Citrus Variety Collection",
+            "url": "https://citrusvariety.ucr.edu/crc391"
+          },
+          {
+            "title": "Mexican lime, Citrus aurantifolia (CRC 1710) - UC Riverside Citrus Variety Collection",
+            "url": "https://citrusvariety.ucr.edu/crc1710"
+          },
+          {
+            "title": "West Indian lime, Citrus aurantifolia (CRC 1813) - UC Riverside Citrus Variety Collection",
+            "url": "https://citrusvariety.ucr.edu/crc1813"
+          },
+          {
+            "title": "Citrus for the Home Garden (UC Master Gardeners of San Diego County, PDF)",
+            "url": "https://mastergardenerssandiego.org/downloads/citrus%20for%20the%20home%20garden.pdf"
+          },
+          {
+            "title": "Frost and Protection of Sensitive Plants - UC Master Gardeners of Sacramento County",
+            "url": "https://ucanr.edu/site/uc-master-gardeners-sacramento-county/frost-and-protection-sensitive-plants"
+          },
+          {
+            "title": "Frost Protection for Citrus - The Real Dirt (UC ANR)",
+            "url": "https://ucanr.edu/blog/real-dirt/article/frost-protection-citrus-1"
+          },
+          {
+            "title": "Answers to frequently asked questions about Citrus | Cooperative Extension Ventura County",
+            "url": "https://ucanr.edu/county/cooperative-extension-ventura-county/answers-frequently-asked-questions-about-citrus"
+          },
+          {
+            "title": "When there are summer heat spikes, trees need more water | Fresno Gardening Green (UC ANR)",
+            "url": "https://ucanr.edu/node/114995"
+          },
+          {
+            "title": "Bearss Seedless Lime Tree - Four Winds Growers",
+            "url": "https://fourwindsgrowers.com/products/bearss-seedless-lime-tree"
+          },
+          {
+            "title": "CDFA - Citrus - Huanglongbing (HLB)",
+            "url": "https://www.cdfa.ca.gov/Citrus/pests_diseases/hlb/regulation.html"
+          }
+        ],
+        "watering": [
+          {
+            "start": "03-01",
+            "end": "05-31",
+            "everyDays": [
+              7,
+              14
+            ],
+            "amount": "Thorough soak, keeping the trunk dry",
+            "notes": "Skip if it has rained."
+          },
+          {
+            "start": "06-01",
+            "end": "09-30",
+            "everyDays": [
+              7,
+              10
+            ],
+            "amount": "Thorough soak, keeping the trunk dry",
+            "notes": "As often as every 3 to 4 days in 95°F+ heat, when the top 3 to 4 inches are dry."
+          },
+          {
+            "start": "10-01",
+            "end": "11-30",
+            "everyDays": [
+              7,
+              14
+            ],
+            "amount": "Thorough soak, keeping the trunk dry",
+            "notes": "Skip if it has rained."
+          }
+        ]
+      },
+      "id": "lime",
+      "actual": {},
+      "done": [],
+      "addedOn": "2026-11-19"
+    }
+  ]
 }

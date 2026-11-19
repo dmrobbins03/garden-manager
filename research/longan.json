@@ -1,0 +1,89 @@
+{
+  "name": "Longan",
+  "variety": null,
+  "category": "fruit tree",
+  "location": "Back yard (in ground)",
+  "quantity": 1,
+  "method": "established",
+  "plan": {},
+  "profile": {
+    "summary": "In Pasadena this young longan most needs steady deep watering through the hot dry season, shelter from hot dry Santa Ana winds and frost while small, and ongoing iron/manganese/zinc correction because it prefers acidic soil and is sitting in alkaline soil with alkaline water. Feed lightly from spring through midsummer, stop nitrogen after August, and expect fruit (once the tree is old enough) to ripen in autumn, much later than in Florida.",
+    "seedPrep": null,
+    "sowing": "",
+    "germination": null,
+    "indoorWeeks": null,
+    "hardenOffDays": null,
+    "windows": [],
+    "daysToMaturity": null,
+    "harvestWeeks": 4,
+    "harvestNotes": "Longan does not sweeten or ripen after picking, so judge by taste, not date. Ripe fruit has turned from greenish to an intense tan, has reached full size (UF/IFAS: about 1 1/4 in. for good Kohala fruit; UC Ventura gives 0.5-1 in. in California), and the pulp is fully sweet. Taste-test one or two fruit from a cluster before cutting it. On a given tree the crop comes in over about 3-4 weeks. In cool-autumn years coastal Southern California growers report fruit that never fully sweetens; Pasadena's hotter inland summer should help.",
+    "harvestSeason": { "start": "09-15", "end": "11-15" },
+    "harvest": {
+      "steps": [
+        "Taste-test a fruit from each cluster first: the skin should be tan and the pulp fully sweet. Partly ripe fruit will not ripen off the tree.",
+        "Cut the whole cluster (panicle) with hand pruners or a pole cutter rather than pulling single fruit; on a bearing-size tree UF/IFAS cuts about 1 ft of branch behind the panicle, on a small tree cut just behind the cluster to keep more wood.",
+        "Do not pull or twist fruit off the stem (it tears the skin); clip individual fruit from the cluster afterwards if wanted.",
+        "Move picked clusters into shade straight away and cool them; refrigerated in a plastic bag they keep about 5-7 days."
+      ],
+      "firstCutWhen": "Skin intense tan (no green), fruit full size, and a sampled fruit tastes fully sweet",
+      "takeAtMost": "All ripe clusters; leave clusters that still taste bland and re-test weekly",
+      "regrowDays": null,
+      "maxCuts": null,
+      "replaceWhen": ""
+    },
+    "succession": null,
+    "fertilizer": [
+      {
+        "label": "Young-tree feeding",
+        "product": "Balanced young-tree/citrus-type granular such as 6-6-6 (or 8-3-9), ideally with 20-30% of nitrogen from organic sources",
+        "amount": "About 0.5-0.75 lb per application for a 4 ft tree (UF/IFAS year 2-3 rate; total 2-5 lb per year), scattered under and just beyond the canopy and watered in",
+        "start": "calendar",
+        "dates": ["03-15", "05-01", "06-15", "08-01"],
+        "notes": "Rates are from the UF/IFAS Florida table (4-5 applications/yr in years 2-3); dates shifted to Pasadena's March-August growth period. No nitrogen after August: UF/IFAS says late nitrogen keeps the tree growing into winter and reduces spring flowering on bearing-age trees, and soft late growth is also more frost-prone. UC Ventura notes manure/compost is a workable alternative in California but gives no rates."
+      },
+      {
+        "label": "Iron chelate drench",
+        "product": "Fe-EDDHA iron chelate (the chelate form that stays available above pH 7.5), as a soil drench",
+        "amount": "About 0.5 oz (14 g) dissolved in 4-5 gallons of water, poured on the soil around the base of the trunk; keep the yearly total near 1-1.5 oz for a tree this size",
+        "start": "calendar",
+        "dates": ["04-15", "06-15", "08-15"],
+        "notes": "UF/IFAS: on alkaline soil drench with iron chelate 2-3 times a year (their window is June-September; 0.5-0.75 oz in 4-5 gal; young-tree yearly total 0.75-1.5 oz). First date moved earlier to catch the spring flush, as USU advises for chelates. UF/IFAS does not name EDDHA; that choice is from USU. Skip a drench if new leaves are solid green."
+      },
+      {
+        "label": "Micronutrient foliar spray",
+        "product": "Chelated/minor-element foliar mix with manganese and zinc (plus magnesium, boron, molybdenum if included), mixed at the product label rate",
+        "amount": "Label rate; spray new and nearly expanded leaves to wetting (a small hand sprayer is plenty for a 4 ft tree)",
+        "start": "calendar",
+        "dates": ["04-20", "06-01", "09-01"],
+        "notes": "UF/IFAS young-tree table calls for 3 minor-element sprays a year, within April-September; it gives no per-tree amount. Spray in the cool of early morning, not during a heat wave or Santa Ana wind. Foliar correction is temporary; repeat on new flushes."
+      }
+    ],
+    "water": "No source gives gallons or intervals for California, so the frequencies here are starting points to adjust by checking soil moisture. UC Ventura rates longan's water need as lower than lychee and about the same as a lemon tree; UC says it tolerates dry soil but not waterlogged soil or salty water. For this young tree: water deeply enough to wet the full root zone and a little beyond the canopy, then let the top few inches dry before watering again (roughly weekly in spring and autumn, every 3-5 days in summer heat, more often during 100F+ spells or Santa Ana winds; little or none in a wet winter, about every 2-3 weeks in a dry one). Staying constantly wet in alkaline soil makes iron chlorosis worse. Keep 3-4 in. of mulch over the root zone, pulled back from the trunk, and leach with an occasional extra-deep soak since longan is salt-sensitive. Once the tree is bearing age, UF/IFAS (Florida) recommends cutting water back in autumn through winter to check growth and promote bloom, then watering regularly from bloom until harvest; do not drought-stress a young non-bearing tree in Pasadena's dry autumn.",
+    "sun": "Full sun (at least 6-8 hours). While small, give it afternoon shade cloth and wind shelter during extreme heat or hot dry winds; UC advises protecting young trees from heat and from hot, dry wind.",
+    "spacing": "15-25 ft tall in California (to 50 ft in ideal climates; 30-40 ft tall and wide in south Florida). Allow 15-25 ft between tree centres per UC (UC Master Gardener article: at least 20 ft; UF/IFAS: 22-25 ft from trees and structures). Can be held to about 10-15 ft tall by pruning after harvest.",
+    "soil": "Does best in rich, well-drained soil on the acidic side (a nursery guide gives pH 5.5-7.0; UC and UF/IFAS give no number). It will not tolerate flooding or saline soil/water. In Pasadena's alkaline soil and water expect recurring iron, manganese and zinc deficiency (yellow new leaves with green veins): do not try to re-acidify the whole yard; instead mulch with organic matter, avoid overwatering, drench with Fe-EDDHA chelate, and apply manganese/zinc as foliar sprays.",
+    "frostTenderBelowF": 32,
+    "heatStressAboveF": 100,
+    "pests": [
+      "Iron/manganese/zinc chlorosis from alkaline soil and water (the main problem here, already seen on this tree) - Fe-EDDHA drenches plus Mn/Zn foliar sprays on the fertilizer calendar; avoid keeping the soil wet.",
+      "Leaf-tip and margin burn from hot dry wind, heat waves or salt build-up - water deeply before heat and Santa Anas, shade the young tree, mulch, and leach salts with occasional long soaks.",
+      "Frost damage on young trees (severe at 29-31F) - cover with frost cloth to the ground on nights forecast near freezing and water the day before.",
+      "Scale insects (listed for Florida; soft scales with ants are plausible here) - check twigs and leaf undersides, control ants, and treat only heavy infestations, e.g. with horticultural oil.",
+      "Birds and other wildlife on ripening fruit - bag or net clusters once fruit starts to colour.",
+      "Root rot in waterlogged soil - let the soil dry between waterings and never let water stand around the trunk."
+    ],
+    "companions": [],
+    "avoidNear": [],
+    "notes": "Cultivar unknown (Kohala is the most common longan in California and the only one in UC's subtropical variety list, harvest listed simply as 'Fall'; Diamond River is the other commonly grown in Southern California). A 4 ft tree may be several years from fruiting: air-layered trees bear about 2-3 years after planting (UC Ventura says 3-5 years), seedlings up to 6 years, and Kohala bears erratically even when mature. Cold: UF/IFAS gives severe damage to young trees at 29-31F and possible death at 26-28F; mature trees are injured at 25-26F (UC: hardened mature trees survive about 22F briefly), so frostTenderBelowF is set at 32F as the protect-by temperature. Pruning: minimal; tip young shoots 1-2 in. once or twice in spring/summer to build branching, and do any size-control pruning right after harvest - UF/IFAS warns that autumn/winter pruning reduces spring bloom, but in Pasadena harvest ends in autumn, so if harvest runs late just remove dead wood and leave shaping until after the next harvest or do it in late spring on a non-bearing tree. Florida-derived numbers (UF/IFAS): all fertilizer rates and frequencies, iron chelate amounts, minor-element spray counts, cold damage temperatures, the autumn nitrogen/water cut-off, fruit size, storage life, and the 'cut 1 ft behind the panicle' rule; Florida harvest is mid-July to early September and does NOT apply here. California-derived: tree size, spacing, water need relative to lemon, 'acidic side' soil preference, late July-December harvest range, Kohala = fall. harvestSeason 09-15 to 11-15 is an estimate for inland Southern California built from UC's 'Fall' for Kohala, UC Ventura's late July-December range, and one south Orange County grower reporting late September in a warm year and later in normal years. Unverified: the exact flowering period in Southern California (sources consulted give none; expected late spring). Unverified: heatStressAboveF of 100F is not a longan-specific figure - sources only say young trees need protection from heat and hot dry wind; 100F follows general Southern California heat-wave guidance. Unverified: watering intervals (no source gives them). Unverified: numeric soil pH range comes from a nursery guide only. Unverified: California-specific insect pests - UC Ventura says longan should be essentially pest-free in California; UC IPM has no longan page that was found. Unverified: the California Rare Fruit Growers longan fruit-facts page could not be opened (site error), so nothing is cited from it.",
+    "sources": [
+      { "title": "FC49/MG049: Longan Growing in the Florida Home Landscape (UF/IFAS)", "url": "https://ask.ifas.ufl.edu/publication/MG049" },
+      { "title": "Longan (UC Cooperative Extension Ventura County, Minor Subtropicals)", "url": "https://ucanr.edu/node/125813" },
+      { "title": "Growing Longan in Southern California (UC ANR, Topics in Subtropics)", "url": "https://ucanr.edu/node/111800" },
+      { "title": "Citrus and Other Subtropicals - fruit variety table (UC Cooperative Extension Ventura County)", "url": "https://ucanr.edu/node/125819" },
+      { "title": "California Dragon Eye (longan) fruit - PalmTalk forum thread", "url": "https://www.palmtalk.org/forum/topic/75557-california-dragon-eye-longan-fruit" },
+      { "title": "Iron Chlorosis | USU", "url": "https://extension.usu.edu/planthealth/ipm/notes_orn/list-treeshrubs/iron-chlorosis" },
+      { "title": "Growing Guide: Longan (Sow Exotic)", "url": "https://sowexotic.com/pages/longan-plant-care" },
+      { "title": "Caring for your Southern California garden during a heat wave (Greg Alder's Yard Posts)", "url": "https://gregalder.com/yardposts/?p=3878" }
+    ]
+  }
+}

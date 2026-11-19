@@ -4,9 +4,16 @@
   garden.py build                              recompute schedule -> data/garden-data.js
   garden.py add FILE.json [FILE.json ...]      add planting(s) from JSON, then build
   garden.py list                               one line per planting
-  garden.py log ID MILESTONE [YYYY-MM-DD]      record seedPrep|sown|germinated|transplanted|firstHarvest|finished
+  garden.py log ID MILESTONE [YYYY-MM-DD] [--round N]
+                                               record seedPrep|sown|germinated|transplanted|firstHarvest|finished
+                                               (on a repeat-sown planting, `sown` starts the next sowing)
+  garden.py harvest ID [YYYY-MM-DD] [--amount TEXT] [--note TEXT] [--round N]
+                                               record one picking or cut (the first also sets firstHarvest)
+  garden.py water ID [YYYY-MM-DD]              record a watering; the next one is counted from it
   garden.py done EVENT_ID [EVENT_ID ...]       tick off a task (e.g. a feeding)
   garden.py set ID PATH VALUE                  e.g. set tomato-sungold plan.sowDate 2027-01-20
+                                               set cilantro succession.everyDays 21   (resow every 3 weeks)
+                                               set cilantro succession null           (stop resowing)
   garden.py remove ID                          drop a planting
   garden.py tasks [--date D] [--days N] [--json]   tasks for a day (+ lookahead), for the daily brief
 """
@@ -24,6 +31,12 @@ MILESTONES = ["seedPrep", "sown", "germinated", "transplanted", "firstHarvest", 
 METHODS = ["indoor-start", "direct-sow", "nursery-transplant", "established"]
 ACTIONABLE = {"seed-prep", "sow", "harden-off", "transplant", "fertilize"}
 OVERDUE_DAYS = 21
+SOWN_METHODS = ("indoor-start", "direct-sow")
+SUCCESSION_HORIZON_DAYS = 365
+SUCCESSION_MAX_ROUNDS = 60
+WATER_HORIZON_DAYS = 400
+WATER_HISTORY_DAYS = 60
+STAGE_RANK = ["harvesting", "growing", "seedling", "germinating", "planned", "unscheduled"]
 
 
 def load():
@@ -80,121 +93,262 @@ def next_window(w, today):
     return None
 
 
+def sow_window_type(method):
+    return "sow-indoors" if method == "indoor-start" else "direct-sow"
+
+
+def snap_to_window(date, ws):
+    """date if it is inside one of the windows (or there are none), else the next window opening."""
+    if not ws or any(in_window(date, w) for w in ws):
+        return date
+    starts = [nw[0] for nw in (next_window(w, date) for w in ws) if nw]
+    return min(starts) if starts else date
+
+
+def succession_of(p):
+    """{'everyDays', 'count'} when the planting is resown on a repeat, else None.
+
+    The planting's own `succession.everyDays` wins; the researched `profile.succession.everyDays` is the fallback.
+    """
+    s = p.get("succession")
+    if not isinstance(s, dict):
+        return None
+    every = s.get("everyDays") or ((p.get("profile") or {}).get("succession") or {}).get("everyDays")
+    if not every:
+        return None
+    return {"everyDays": int(every), "count": s.get("count"), "nextSowDate": s.get("nextSowDate")}
+
+
+def logged_rounds(p):
+    act = p.get("actual") or {}
+    return ([act] if any(act.values()) else []) + list(p.get("sowings") or [])
+
+
+def plan_rounds(p, today):
+    """[(round_no, logged_dates, sow_date)]. One entry with round_no None for an ordinary planting.
+
+    A repeat-sown planting gets every logged sowing, then projected ones `everyDays` apart. Each is counted
+    from the sowing before it (so a late sowing pushes the rest back), skips to the next window opening when
+    it would land outside the sowing window, and stops at `succession.count` or a year out. A projected
+    sowing more than OVERDUE_DAYS late with nothing logged is dropped.
+    """
+    plan = p.get("plan") or {}
+    succ = succession_of(p)
+    if not succ and not p.get("sowings"):
+        return [(None, p.get("actual") or {}, d(plan.get("sowDate")))]
+    ws = [w for w in (p.get("profile") or {}).get("windows") or []
+          if w["type"] == sow_window_type(p.get("method", "direct-sow"))]
+    every = succ["everyDays"] if succ else None
+    first, pin = d(plan.get("sowDate")), d(succ.get("nextSowDate")) if succ else None
+    state = {"prev": None, "pin": pin}
+
+    def next_sow():
+        prev = state["prev"]
+        if prev is None:
+            return first
+        if state["pin"] and state["pin"] > prev:
+            return state["pin"]
+        return snap_to_window(prev + dt.timedelta(days=every), ws) if every else None
+
+    rounds = []
+    for act in logged_rounds(p):
+        sow = d(act.get("sown"))
+        if not sow:
+            sow = next_sow()
+            state["pin"] = None
+        rounds.append((len(rounds) + 1, act, sow))
+        state["prev"] = sow or state["prev"]
+    if succ:
+        limit = min(succ.get("count") or SUCCESSION_MAX_ROUNDS, SUCCESSION_MAX_ROUNDS)
+        horizon = today + dt.timedelta(days=SUCCESSION_HORIZON_DAYS)
+        while len(rounds) < limit:
+            sow = next_sow()
+            state["pin"] = None
+            if sow is None or sow > horizon:
+                break
+            state["prev"] = sow
+            if sow < today - dt.timedelta(days=OVERDUE_DAYS):
+                continue  # a sowing that was missed and never logged: drop it, keep the rhythm
+            rounds.append((len(rounds) + 1, {}, sow))
+    return rounds
+
+
 def schedule(p, today):
     prof = p.get("profile") or {}
     plan = p.get("plan") or {}
-    act = p.get("actual") or {}
     method = p.get("method", "direct-sow")
     done = set(p.get("done") or [])
     label = p["name"] + (f" '{p['variety']}'" if p.get("variety") else "")
     events, warnings = [], []
-
-    def add(kind, date, title, detail="", end=None, milestone=None):
-        eid = f"{p['id']}:{kind}:{date.isoformat()}"
-        events.append({
-            "id": eid, "plantingId": p["id"], "plant": label, "type": kind,
-            "date": date.isoformat(), "end": end.isoformat() if end else None,
-            "title": title, "detail": detail, "milestone": milestone,
-            "done": bool(eid in done or (milestone and any(act.get(m) for m in MILESTONES[MILESTONES.index(milestone):]))),
-            "location": p.get("location") or "",
-        })
-
     windows = prof.get("windows") or []
-    sow = tp = None
-    if method in ("indoor-start", "direct-sow"):
-        sow = d(act.get("sown")) or d(plan.get("sowDate"))
     germ = prof.get("germination") or {}
     gmin, gmax = lo(germ.get("days"), 7), hi(germ.get("days"), 14)
-    germ_date = d(act.get("germinated"))
-
-    if sow:
-        prep = prof.get("seedPrep")
-        if prep and prep.get("steps"):
-            pd = d(act.get("seedPrep")) or sow - dt.timedelta(days=prep.get("leadDays", 0))
-            add("seed-prep", pd, f"Prep seeds: {label}", " ".join(prep["steps"]), milestone="seedPrep")
-        where = "indoors" if method == "indoor-start" else "outdoors"
-        add("sow", sow, f"Sow {label} {where}", prof.get("sowing", ""), milestone="sown")
-        if germ_date:
-            add("germination", germ_date, f"{label} germinated", milestone="germinated")
-        else:
-            add("germination", sow + dt.timedelta(days=gmin), f"Watch for germination: {label}",
-                germ.get("notes", ""), end=sow + dt.timedelta(days=gmax), milestone="germinated")
-        wtype = "sow-indoors" if method == "indoor-start" else "direct-sow"
-        ws = [w for w in windows if w["type"] == wtype]
-        if ws and not act.get("sown") and not any(in_window(sow, w) for w in ws):
-            warnings.append(f"Sow date {sow.isoformat()} is outside the {wtype} window")
-
-    if method == "indoor-start":
-        tp = d(act.get("transplanted")) or d(plan.get("transplantDate"))
-        if not tp and sow:
-            tp = sow + dt.timedelta(days=round(mid(prof.get("indoorWeeks"), 6) * 7))
-    elif method == "nursery-transplant":
-        tp = d(act.get("transplanted")) or d(plan.get("transplantDate"))
-    if tp:
-        h = prof.get("hardenOffDays") or 0
-        if method == "indoor-start" and h:
-            hs_ = tp - dt.timedelta(days=h)
-            eid = f"{p['id']}:harden-off:{hs_.isoformat()}"
-            add("harden-off", hs_, f"Start hardening off {label}",
-                f"{h} days of increasing outdoor exposure before transplanting.", end=tp - dt.timedelta(days=1))
-            if act.get("transplanted"):
-                events[-1]["done"] = True
-        add("transplant", tp, f"Transplant {label}" + (f" to {p['location']}" if p.get("location") else ""),
-            prof.get("spacing", ""), milestone="transplanted")
-        ws = [w for w in windows if w["type"] == "transplant"]
-        if ws and not act.get("transplanted") and not any(in_window(tp, w) for w in ws):
-            warnings.append(f"Transplant date {tp.isoformat()} is outside the transplant window")
-
-    # harvest
-    hs = he = None
-    dtm = prof.get("daysToMaturity")
-    base = None
-    if dtm:
-        base = tp if (dtm.get("from", "sow") == "transplant" and tp) else (sow or tp)
-    if base:
-        hs = d(act.get("firstHarvest")) or base + dt.timedelta(days=lo(dtm["days"]))
-        he = d(act.get("finished")) or hs + dt.timedelta(days=round((prof.get("harvestWeeks") or 4) * 7))
-        add("harvest", hs, f"Harvest begins: {label}" + ("" if act.get("firstHarvest") else " (est.)"),
-            prof.get("harvestNotes", ""), end=he, milestone="firstHarvest")
-    elif prof.get("harvestSeason"):
-        nw = next_window(prof["harvestSeason"], today)
-        if nw:
-            hs, he = nw
-            add("harvest", hs, f"Harvest season: {label}", prof.get("harvestNotes", ""), end=he)
-
-    # fertiliser
-    anchors = {"sow": sow, "transplant": tp, "harvest-start": hs,
-               "germination": germ_date or (sow + dt.timedelta(days=gmax) if sow else None)}
     horizon = today + dt.timedelta(days=400)
-    for f in prof.get("fertilizer") or []:
-        detail = " — ".join(x for x in [f.get("product"), f.get("amount"), f.get("notes")] if x)
-        title = f"Feed {label}: {f.get('label', 'fertilize')}"
-        if f.get("start") == "calendar":
-            for y in (today.year, today.year + 1):
-                for s in f.get("dates") or []:
-                    day = md(s, y)
-                    if today - dt.timedelta(days=45) <= day <= horizon:
-                        add("fertilize", day, title, detail)
-            continue
-        a = anchors.get(f.get("start", "transplant")) or tp or sow
-        if not a:
-            continue
-        day = a + dt.timedelta(days=f.get("offsetDays", 0))
-        every = f.get("everyDays")
-        until = {"harvest-start": hs, "harvest-end": he}.get(f.get("until", "harvest-end"), he) or horizon
-        count = f.get("count") or (60 if every else 1)
-        n = 0
-        while n < count and day <= horizon:
-            if n and day > until:
-                break
-            add("fertilize", day, title, detail)
-            n += 1
-            if not every:
-                break
-            day += dt.timedelta(days=every)
+    iso = lambda x: x.isoformat() if x else None
+    succ = succession_of(p)
+    hv = prof.get("harvest") or {}
+    how = " ".join(x for x in [prof.get("harvestNotes", "")] + list(hv.get("steps") or []) if x)
+    cut_detail = " ".join(x for x in list(hv.get("steps") or []) + [f"Take at most {hv['takeAtMost']}." if hv.get("takeAtMost") else ""] if x)
+    picked = p.get("harvests") or []
+
+    def one(rno, act, sow_in, calendar_feeds):
+        """Schedule one sowing. rno is None for an ordinary planting, 1.. for a repeat-sown one."""
+        rid = f"{p['id']}:r{rno}" if rno else p["id"]
+        nth = f" (sowing {rno})" if rno else ""
+
+        def add(kind, date, title, detail="", end=None, milestone=None, key=None):
+            eid = f"{rid}:{key or kind}:{date.isoformat()}"
+            events.append({
+                "id": eid, "plantingId": p["id"], "plant": label, "type": kind,
+                "date": date.isoformat(), "end": end.isoformat() if end else None,
+                "title": title, "detail": detail, "milestone": milestone, "round": rno,
+                "done": bool(eid in done or (milestone and any(act.get(m) for m in MILESTONES[MILESTONES.index(milestone):]))),
+                "location": p.get("location") or "",
+            })
+
+        sow = tp = None
+        if method in SOWN_METHODS:
+            sow = d(act.get("sown")) or sow_in
+        germ_date = d(act.get("germinated"))
+        seed_prep = None
+
+        if sow:
+            prep = prof.get("seedPrep")
+            if prep and prep.get("steps"):
+                seed_prep = d(act.get("seedPrep")) or sow - dt.timedelta(days=prep.get("leadDays", 0))
+                add("seed-prep", seed_prep, f"Prep seeds: {label}{nth}", " ".join(prep["steps"]), milestone="seedPrep")
+            where = "indoors" if method == "indoor-start" else "outdoors"
+            add("sow", sow, f"Sow {label} {where}{nth}", prof.get("sowing", ""), milestone="sown")
+            if germ_date:
+                add("germination", germ_date, f"{label} germinated{nth}", milestone="germinated")
+            else:
+                add("germination", sow + dt.timedelta(days=gmin), f"Watch for germination: {label}{nth}",
+                    germ.get("notes", ""), end=sow + dt.timedelta(days=gmax), milestone="germinated")
+            wtype = sow_window_type(method)
+            ws = [w for w in windows if w["type"] == wtype]
+            if ws and not act.get("sown") and not any(in_window(sow, w) for w in ws):
+                warnings.append(f"Sow date {sow.isoformat()} is outside the {wtype} window")
+
+        plan_tp = d(plan.get("transplantDate")) if rno in (None, 1) else None
+        if method == "indoor-start":
+            tp = d(act.get("transplanted")) or plan_tp
+            if not tp and sow:
+                tp = sow + dt.timedelta(days=round(mid(prof.get("indoorWeeks"), 6) * 7))
+        elif method == "nursery-transplant":
+            tp = d(act.get("transplanted")) or plan_tp
+        if tp:
+            h = prof.get("hardenOffDays") or 0
+            if method == "indoor-start" and h:
+                add("harden-off", tp - dt.timedelta(days=h), f"Start hardening off {label}{nth}",
+                    f"{h} days of increasing outdoor exposure before transplanting.", end=tp - dt.timedelta(days=1))
+                if act.get("transplanted"):
+                    events[-1]["done"] = True
+            add("transplant", tp, f"Transplant {label}{nth}" + (f" to {p['location']}" if p.get("location") else ""),
+                prof.get("spacing", ""), milestone="transplanted")
+            ws = [w for w in windows if w["type"] == "transplant"]
+            if ws and not act.get("transplanted") and not any(in_window(tp, w) for w in ws):
+                warnings.append(f"Transplant date {tp.isoformat()} is outside the transplant window")
+
+        # harvest
+        hs = he = None
+        dtm = prof.get("daysToMaturity")
+        base = None
+        if dtm:
+            base = tp if (dtm.get("from", "sow") == "transplant" and tp) else (sow or tp)
+        if base:
+            hs = d(act.get("firstHarvest")) or base + dt.timedelta(days=lo(dtm["days"]))
+            he = d(act.get("finished")) or hs + dt.timedelta(days=round((prof.get("harvestWeeks") or 4) * 7))
+            add("harvest", hs, f"Harvest begins: {label}{nth}" + ("" if act.get("firstHarvest") else " (est.)"),
+                how, end=he, milestone="firstHarvest")
+        elif prof.get("harvestSeason"):
+            nw = next_window(prof["harvestSeason"], today)
+            if nw:
+                hs, he = nw
+                add("harvest", hs, f"Harvest season: {label}", prof.get("harvestNotes", ""), end=he)
+
+        # pickings logged so far, and when this sowing can be cut again or is used up
+        cuts = sorted(h["date"] for h in picked if rno is None or h.get("round") == rno)
+        last_cut = d(cuts[-1]) if cuts else None
+        max_cuts = hv.get("maxCuts")
+        spent = bool(max_cuts and len(cuts) >= max_cuts and not act.get("finished"))
+        next_cut = None
+        if last_cut and not act.get("finished"):
+            if spent:
+                add("harvest", max(last_cut, today), f"{label}{nth} has given its {max_cuts} cuts: pull it"
+                    + (", the next sowing takes over" if succ else " and resow"),
+                    hv.get("replaceWhen", ""), milestone="finished", key="spent")
+            elif lo(hv.get("regrowDays")):
+                next_cut = last_cut + dt.timedelta(days=lo(hv["regrowDays"]))
+                when = max(next_cut, today)
+                if not he or when <= he:
+                    add("harvest", when, f"Cut again: {label}{nth}",
+                        (f"Regrown since {next_cut.strftime('%b %-d')}. " if next_cut < today else "") + cut_detail, key="recut")
+
+        # fertiliser
+        anchors = {"sow": sow, "transplant": tp, "harvest-start": hs,
+                   "germination": germ_date or (sow + dt.timedelta(days=gmax) if sow else None)}
+        for f in prof.get("fertilizer") or []:
+            detail = " — ".join(x for x in [f.get("product"), f.get("amount"), f.get("notes")] if x)
+            title = f"Feed {label}{nth}: {f.get('label', 'fertilize')}"
+            if f.get("start") == "calendar":
+                if not calendar_feeds:
+                    continue
+                for y in (today.year, today.year + 1):
+                    for s in f.get("dates") or []:
+                        day = md(s, y)
+                        if today - dt.timedelta(days=45) <= day <= horizon:
+                            add("fertilize", day, f"Feed {label}: {f.get('label', 'fertilize')}", detail)
+                continue
+            a = anchors.get(f.get("start", "transplant")) or tp or sow
+            if not a:
+                continue
+            day = a + dt.timedelta(days=f.get("offsetDays", 0))
+            every = f.get("everyDays")
+            until = {"harvest-start": hs, "harvest-end": he}.get(f.get("until", "harvest-end"), he) or horizon
+            count = f.get("count") or (60 if every else 1)
+            n = 0
+            while n < count and day <= horizon:
+                if n and day > until:
+                    break
+                add("fertilize", day, title, detail)
+                n += 1
+                if not every:
+                    break
+                day += dt.timedelta(days=every)
+
+        # stage
+        if act.get("finished"):
+            stage = "finished"
+        elif method == "established":
+            stage = "established"
+        elif act.get("firstHarvest") or (hs and base and today >= hs and (act.get("transplanted") or act.get("sown"))):
+            stage = "harvesting"
+        elif act.get("transplanted") or (method == "direct-sow" and act.get("germinated")):
+            stage = "growing"
+        elif act.get("germinated"):
+            stage = "seedling"
+        elif act.get("sown"):
+            stage = "germinating"
+        elif sow or tp:
+            stage = "planned"
+        else:
+            stage = "unscheduled"
+
+        return {
+            "round": rno, "stage": stage, "sown": bool(act.get("sown")),
+            "seedPrep": iso(seed_prep), "sow": iso(sow),
+            "germination": [iso(germ_date), iso(germ_date)] if germ_date else
+                           ([iso(sow + dt.timedelta(days=gmin)), iso(sow + dt.timedelta(days=gmax))] if sow else None),
+            "transplant": iso(tp), "harvestStart": iso(hs), "harvestEnd": iso(he),
+            "cuts": len(cuts), "lastCut": iso(last_cut), "nextCut": iso(next_cut), "spent": spent,
+        }
+
+    rounds = [one(rno, act, sow_in, i == 0) for i, (rno, act, sow_in) in enumerate(plan_rounds(p, today))]
+    if not rounds:  # repeat-sown, but nothing sown or dated yet
+        rounds = [one(None, {}, None, True)]
 
     # unscheduled: surface the next window
-    if method != "established" and not sow and not tp:
+    if method != "established" and not any(r["sow"] or r["transplant"] for r in rounds):
         want = {"indoor-start": "sow-indoors", "direct-sow": "direct-sow", "nursery-transplant": "transplant"}[method]
         for w in windows:
             if w["type"] != want:
@@ -203,37 +357,95 @@ def schedule(p, today):
             if nw:
                 s, e = nw
                 when = max(s, today)
-                add("window-open", when, f"Planting window for {label}: pick a date",
-                    f"{want} window runs {s.strftime('%b %-d')} – {e.strftime('%b %-d')}.", end=e)
+                eid = f"{p['id']}:window-open:{when.isoformat()}"
+                events.append({
+                    "id": eid, "plantingId": p["id"], "plant": label, "type": "window-open",
+                    "date": when.isoformat(), "end": e.isoformat(),
+                    "title": f"Planting window for {label}: pick a date",
+                    "detail": f"{want} window runs {s.strftime('%b %-d')} – {e.strftime('%b %-d')}.",
+                    "milestone": None, "round": None, "done": eid in done, "location": p.get("location") or "",
+                })
 
-    # stage
-    if act.get("finished"):
-        stage = "finished"
-    elif method == "established":
-        stage = "established"
-    elif act.get("firstHarvest") or (hs and base and today >= hs and (act.get("transplanted") or act.get("sown"))):
-        stage = "harvesting"
-    elif act.get("transplanted") or (method == "direct-sow" and act.get("germinated")):
-        stage = "growing"
-    elif act.get("germinated"):
-        stage = "seedling"
-    elif act.get("sown"):
-        stage = "germinating"
-    elif sow or tp:
-        stage = "planned"
-    else:
-        stage = "unscheduled"
+    # watering: counted from the last logged watering, at the interval the season's rule gives
+    rules = [w for w in prof.get("watering") or [] if w.get("everyDays")]
+    in_ground = method == "established" or any(r["stage"] in ("germinating", "seedling", "growing", "harvesting") for r in rounds)
+    watered = sorted(set(p.get("watered") or []))
+    last_watered = d(watered[-1]) if watered else None
+    next_water = None
 
-    iso = lambda x: x.isoformat() if x else None
+    def push_water(day, title, detail, is_done):
+        eid = f"{p['id']}:water:{day.isoformat()}"
+        events.append({"id": eid, "plantingId": p["id"], "plant": label, "type": "water", "date": day.isoformat(), "end": None,
+                       "title": title, "detail": detail, "milestone": None, "round": None,
+                       "done": bool(is_done or eid in done), "location": p.get("location") or ""})
+
+    for s in watered:
+        if d(s) >= today - dt.timedelta(days=WATER_HISTORY_DAYS):
+            push_water(d(s), f"Watered {label}", "", True)
+    if rules and in_ground:
+        rule_at = lambda day: next((w for w in rules if in_window(day, w)), None)
+        every_of = lambda w: max(1, round(mid(w["everyDays"])))
+        detail_of = lambda w: " — ".join(x for x in [w.get("amount"), w.get("notes")] if x)
+        cursor, first_note = today, ""
+        if last_watered:
+            w = rule_at(last_watered) or rule_at(today)
+            cursor = last_watered + dt.timedelta(days=every_of(w)) if w else today
+            if cursor < today:
+                cursor, first_note = today, f"Last watered {last_watered.strftime('%b %-d')}. "
+            elif cursor == last_watered:
+                cursor = last_watered + dt.timedelta(days=1)
+        else:
+            first_note = "No watering logged yet: water if the soil is dry a few inches down, then tick this to start the rhythm. "
+        end = today + dt.timedelta(days=WATER_HORIZON_DAYS)
+        for _ in range(WATER_HORIZON_DAYS + 5):
+            w = rule_at(cursor)
+            if not w:
+                nxt = snap_to_window(cursor, rules)
+                if nxt == cursor:
+                    break
+                cursor = nxt
+                continue
+            if cursor > end:
+                break
+            if next_water is None:
+                next_water = cursor
+            push_water(cursor, f"Water {label}", first_note + detail_of(w), False)
+            first_note = ""
+            cursor += dt.timedelta(days=every_of(w))
+
+    next_feed = next((e["date"] for e in sorted(events, key=lambda e: e["date"])
+                      if e["type"] == "fertilize" and not e["done"] and e["date"] >= today.isoformat()), None)
+
+    if rounds[0]["round"] is None:  # ordinary planting: one sowing
+        r = rounds[0]
+        computed = {k: r[k] for k in ("stage", "seedPrep", "sow", "germination", "transplant", "harvestStart", "harvestEnd")}
+        computed.update({"warnings": warnings, "nextFeed": next_feed,
+                         "nextWater": iso(next_water), "lastWatered": iso(last_watered),
+                         "harvests": {"count": r["cuts"], "last": r["lastCut"], "nextCut": r["nextCut"]}})
+        if succ:
+            computed["succession"] = {"everyDays": succ["everyDays"], "nextSow": None, "sown": 0}
+        return computed, events
+
+    # repeat-sown: the row shows the next sowing still to do, and the harvest all live sowings add up to
+    live = [r for r in rounds if r["stage"] != "finished"]
+    focus = next((r for r in rounds if not r["sown"]), rounds[-1])
+    starts = [r["harvestStart"] for r in live if r["harvestStart"]]
+    ends = [r["harvestEnd"] for r in live if r["harvestEnd"]]
+    every = succ["everyDays"] if succ else None
+    hw = prof.get("harvestWeeks")
+    if every and hw and every > hw * 7:
+        warnings.append(f"Resown every {every} days but each sowing is picked for about {hw} weeks: expect gaps between harvests")
     computed = {
-        "stage": stage, "warnings": warnings,
-        "seedPrep": next((e["date"] for e in events if e["type"] == "seed-prep"), None),
-        "sow": iso(sow),
-        "germination": [iso(germ_date), iso(germ_date)] if germ_date else
-                       ([iso(sow + dt.timedelta(days=gmin)), iso(sow + dt.timedelta(days=gmax))] if sow else None),
-        "transplant": iso(tp), "harvestStart": iso(hs), "harvestEnd": iso(he),
-        "nextFeed": next((e["date"] for e in sorted(events, key=lambda e: e["date"])
-                          if e["type"] == "fertilize" and not e["done"] and e["date"] >= today.isoformat()), None),
+        "stage": min((r["stage"] for r in live), key=STAGE_RANK.index) if live else "finished",
+        "warnings": warnings,
+        "seedPrep": focus["seedPrep"], "sow": focus["sow"], "germination": focus["germination"],
+        "transplant": focus["transplant"],
+        "harvestStart": min(starts) if starts else None, "harvestEnd": max(ends) if ends else None,
+        "nextFeed": next_feed, "rounds": rounds, "nextWater": iso(next_water), "lastWatered": iso(last_watered),
+        "harvests": {"count": len(picked), "last": max((h["date"] for h in picked), default=None),
+                     "nextCut": min((r["nextCut"] for r in live if r["nextCut"]), default=None)},
+        "succession": {"everyDays": every, "nextSow": None if focus["sown"] else focus["sow"],
+                       "sown": sum(1 for r in rounds if r["sown"])},
     }
     return computed, events
 
@@ -247,6 +459,27 @@ def build(g, today=None):
         seen.add(p["id"])
         if p.get("method", "direct-sow") not in METHODS:
             sys.exit(f"{p['id']}: method must be one of {METHODS}")
+        for s in p.get("watered") or []:
+            d(s)
+        for w in (p.get("profile") or {}).get("watering") or []:
+            if not isinstance(w, dict) or not w.get("start") or not w.get("end") or not w.get("everyDays"):
+                sys.exit(f"{p['id']}: every profile.watering rule needs start, end (MM-DD) and everyDays")
+            md(w["start"], 2024), md(w["end"], 2024)
+        for h in p.get("harvests") or []:
+            if not isinstance(h, dict) or not h.get("date"):
+                sys.exit(f"{p['id']}: every entry in harvests needs a date")
+            d(h["date"])
+        if p.get("succession") is not None:
+            s = p["succession"]
+            if not isinstance(s, dict):
+                sys.exit(f"{p['id']}: succession must be an object like {{\"everyDays\": 21}}, or null")
+            if p.get("method", "direct-sow") not in SOWN_METHODS:
+                sys.exit(f"{p['id']}: succession only applies to indoor-start and direct-sow plantings")
+            e = s.get("everyDays")
+            if e is not None and (not isinstance(e, (int, float)) or isinstance(e, bool) or e < 1):
+                sys.exit(f"{p['id']}: succession.everyDays must be a number of days, 1 or more")
+            if not succession_of(p):
+                sys.exit(f"{p['id']}: succession needs everyDays (here or in profile.succession)")
         computed, ev = schedule(p, today)
         plantings.append({**p, "computed": computed})
         events += ev
@@ -289,6 +522,9 @@ def cmd_add(a):
             p["id"] = pid
             ids.add(pid)
             p.setdefault("method", "direct-sow")
+            rec = ((p.get("profile") or {}).get("succession") or {}).get("everyDays")
+            if rec and "succession" not in p and p["method"] in SOWN_METHODS:
+                p["succession"] = {"everyDays": rec}
             p.setdefault("plan", {})
             p.setdefault("actual", {})
             p.setdefault("done", [])
@@ -304,12 +540,113 @@ def cmd_add(a):
 def cmd_log(a):
     g = load()
     p = find(g, a.id)
-    if a.milestone not in MILESTONES:
+    m = a.milestone
+    if m not in MILESTONES:
         sys.exit(f"milestone must be one of {MILESTONES}")
-    p.setdefault("actual", {})[a.milestone] = a.date or dt.date.today().isoformat()
+    date = a.date or dt.date.today().isoformat()
+    d(date)  # must be a real YYYY-MM-DD
+    if not (succession_of(p) or p.get("sowings")):
+        if a.round:
+            sys.exit(f"{a.id} is not repeat-sown; drop --round, or turn it on with: set {a.id} succession.everyDays N")
+        p.setdefault("actual", {})[m] = date
+        save(g)
+        write_js(g)
+        print(f"{a.id}: {m} = {date}")
+        return
+    # repeat-sown: each sowing keeps its own dates in p["sowings"]
+    rounds = p.setdefault("sowings", [])
+    if any((p.get("actual") or {}).values()):  # dates logged before succession was turned on are sowing 1
+        rounds.insert(0, dict(p["actual"]))
+        p["actual"] = {}
+    later = MILESTONES[MILESTONES.index(m):]
+    if a.round:
+        if a.round == len(rounds) + 1:
+            rounds.append({})
+        elif not 1 <= a.round <= len(rounds):
+            sys.exit(f"{a.id} has {len(rounds)} logged sowing(s); --round must be 1..{len(rounds) + 1}")
+        n = a.round
+    elif m in ("seedPrep", "sown"):
+        # the open sowing is the last one if it is not in the ground yet; otherwise this starts a new one
+        if rounds and not any(rounds[-1].get(x) for x in later):
+            n = len(rounds)
+        else:
+            rounds.append({})
+            n = len(rounds)
+    else:
+        # the oldest sowing that has not reached this point yet
+        n = next((i + 1 for i, r in enumerate(rounds) if r.get("sown") and not any(r.get(x) for x in later)), None)
+        if n is None:
+            sys.exit(f"{a.id}: no sowing is waiting for {m!r}. Log `sown` first, or pass --round N.")
+    rounds[n - 1][m] = date
+    if m == "sown" and isinstance(p.get("succession"), dict):
+        p["succession"].pop("nextSowDate", None)
+    build(g)
     save(g)
     write_js(g)
-    print(f"{a.id}: {a.milestone} = {p['actual'][a.milestone]}")
+    print(f"{a.id}: sowing {n} {m} = {date}")
+
+
+def cmd_harvest(a):
+    g = load()
+    p = find(g, a.id)
+    date = a.date or dt.date.today().isoformat()
+    d(date)
+    entry = {"date": date}
+    if succession_of(p) or p.get("sowings"):
+        rounds = p.setdefault("sowings", [])
+        if any((p.get("actual") or {}).values()):
+            rounds.insert(0, dict(p["actual"]))
+            p["actual"] = {}
+        if a.round:
+            if not 1 <= a.round <= len(rounds):
+                sys.exit(f"{a.id} has {len(rounds)} logged sowing(s); --round must be 1..{len(rounds)}")
+            n = a.round
+        else:
+            # the oldest sowing still standing that has cuts left in it
+            max_cuts = ((p.get("profile") or {}).get("harvest") or {}).get("maxCuts")
+            count = lambda i: sum(1 for h in p.get("harvests") or [] if h.get("round") == i + 1)
+            live = [i for i, r in enumerate(rounds) if r.get("sown") and not r.get("finished")]
+            fresh = [i for i in live if not (max_cuts and count(i) >= max_cuts)]
+            if not live:
+                sys.exit(f"{a.id}: no sowing in the ground to pick from. Log `sown` first, or pass --round N.")
+            n = (fresh or live)[0] + 1
+        entry["round"] = n
+        act = rounds[n - 1]
+    else:
+        if a.round:
+            sys.exit(f"{a.id} is not repeat-sown; drop --round")
+        act = p.setdefault("actual", {})
+    if not act.get("firstHarvest") or date < act["firstHarvest"]:
+        act["firstHarvest"] = date
+    if a.amount:
+        entry["amount"] = a.amount
+    if a.note:
+        entry["notes"] = a.note
+    p.setdefault("harvests", []).append(entry)
+    p["harvests"].sort(key=lambda h: h["date"])
+    build(g)
+    save(g)
+    out = write_js(g)
+    c = next(x for x in out["plantings"] if x["id"] == a.id)["computed"]
+    r = next((x for x in c.get("rounds") or [] if x["round"] == entry.get("round")), None)
+    n_cuts = r["cuts"] if r else c["harvests"]["count"]
+    nxt = (r or c["harvests"]).get("nextCut")
+    print(f"{a.id}: harvest logged {date}" + (f" (sowing {entry['round']})" if entry.get("round") else "")
+          + f", cut {n_cuts}" + (f", ready again about {nxt}" if nxt else "")
+          + (", this sowing is used up" if r and r["spent"] else ""))
+
+
+def cmd_water(a):
+    g = load()
+    p = find(g, a.id)
+    date = a.date or dt.date.today().isoformat()
+    d(date)
+    p["watered"] = sorted(set((p.get("watered") or []) + [date]))[-WATER_HISTORY_DAYS:]
+    build(g)
+    save(g)
+    out = write_js(g)
+    c = next(x for x in out["plantings"] if x["id"] == a.id)["computed"]
+    print(f"{a.id}: watered {date}" + (f", next about {c['nextWater']}" if c.get("nextWater") else ""))
 
 
 def cmd_done(a):
@@ -328,7 +665,9 @@ def cmd_set(a):
     node = find(g, a.id)
     keys = a.path.split(".")
     for k in keys[:-1]:
-        node = node.setdefault(k, {})
+        if node.get(k) is None:
+            node[k] = {}
+        node = node[k]
     try:
         val = json.loads(a.value)
     except ValueError:
@@ -354,7 +693,11 @@ def cmd_list(a):
     for p in out["plantings"]:
         c = p["computed"]
         print(f"{p['id']:32} {c['stage']:12} sow={c['sow'] or '-':10} transplant={c['transplant'] or '-':10} "
-              f"harvest={c['harvestStart'] or '-':10} nextFeed={c['nextFeed'] or '-'}")
+              f"harvest={c['harvestStart'] or '-':10} nextFeed={c['nextFeed'] or '-'}"
+              + (f"  resow every {c['succession']['everyDays']}d ({c['succession']['sown']} sown, "
+                 f"next {c['succession']['nextSow'] or '-'})" if (c.get("succession") or {}).get("everyDays") else "")
+              + (f"  water {c['nextWater']}" if c.get("nextWater") else "")
+              + (f"  picked {c['harvests']['count']}x, last {c['harvests']['last']}" if c["harvests"]["count"] else ""))
     if not out["plantings"]:
         print("(no plantings yet)")
 
@@ -367,13 +710,14 @@ def tasks_for(out, day, days):
     for e in out["events"]:
         if e["done"]:
             continue
+        who = e["plant"] + (f" (sowing {e['round']})" if e.get("round") else "")
         if e["date"] == t:
             today.append(e)
         elif e["type"] == "germination" and e["end"] and e["date"] < t:
             if e["end"] < t and e["end"] >= floor:
-                overdue.append({**e, "title": f"No germination logged for {e['plant']} — check, resow if needed"})
+                overdue.append({**e, "title": f"No germination logged for {who} — check, resow if needed"})
             elif e["end"] >= t:
-                today.append({**e, "title": f"Check for sprouts: {e['plant']}"})
+                today.append({**e, "title": f"Check for sprouts: {who}"})
         elif e["type"] in ACTIONABLE and floor <= e["date"] < t:
             overdue.append(e)
         elif t < e["date"] <= end:
@@ -424,7 +768,9 @@ def main():
     sub.add_parser("build").set_defaults(fn=lambda a: (write_js(load()), print("built", OUT)))
     s = sub.add_parser("add"); s.add_argument("files", nargs="+"); s.set_defaults(fn=cmd_add)
     sub.add_parser("list").set_defaults(fn=cmd_list)
-    s = sub.add_parser("log"); s.add_argument("id"); s.add_argument("milestone"); s.add_argument("date", nargs="?"); s.set_defaults(fn=cmd_log)
+    s = sub.add_parser("log"); s.add_argument("id"); s.add_argument("milestone"); s.add_argument("date", nargs="?"); s.add_argument("--round", type=int); s.set_defaults(fn=cmd_log)
+    s = sub.add_parser("harvest"); s.add_argument("id"); s.add_argument("date", nargs="?"); s.add_argument("--amount"); s.add_argument("--note"); s.add_argument("--round", type=int); s.set_defaults(fn=cmd_harvest)
+    s = sub.add_parser("water"); s.add_argument("id"); s.add_argument("date", nargs="?"); s.set_defaults(fn=cmd_water)
     s = sub.add_parser("done"); s.add_argument("event_ids", nargs="+"); s.set_defaults(fn=cmd_done)
     s = sub.add_parser("set"); s.add_argument("id"); s.add_argument("path"); s.add_argument("value"); s.set_defaults(fn=cmd_set)
     s = sub.add_parser("remove"); s.add_argument("id"); s.set_defaults(fn=cmd_remove)

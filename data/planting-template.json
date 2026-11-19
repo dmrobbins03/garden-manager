@@ -1,5 +1,5 @@
 {
-  "_comment": "TEMPLATE ONLY — placeholder values showing the shape. Every number must come from research for the actual variety and for Pasadena (USDA 10b). Delete _comment before adding.",
+  "_comment": "TEMPLATE ONLY — placeholder values showing the shape. Every number must come from research for the actual variety and for Pasadena (USDA 10b). Set profile.succession to {everyDays, notes} only for crops that are used up and resown (cilantro, dill, green onions); null otherwise. Fill profile.harvest for anything picked more than once. Delete _comment before adding.",
   "name": "Tomato",
   "variety": "Example Variety",
   "category": "vegetable",
@@ -23,11 +23,24 @@
     "harvestWeeks": 12,
     "harvestNotes": "Pick when fully coloured and slightly soft.",
     "harvestSeason": null,
+    "harvest": {
+      "steps": ["Twist or snip the fruit off with its green cap."],
+      "firstCutWhen": "first truss fully coloured",
+      "takeAtMost": "all ripe fruit",
+      "regrowDays": [2, 4],
+      "maxCuts": null,
+      "replaceWhen": "Pull the plant when new growth stops setting fruit."
+    },
+    "succession": null,
     "fertilizer": [
       { "label": "At transplant", "product": "Balanced organic 4-4-4", "amount": "2 tbsp per hole", "start": "transplant", "offsetDays": 0 },
       { "label": "Side-dress", "product": "Low-N tomato feed 3-4-6", "amount": "per label", "start": "transplant", "offsetDays": 21, "everyDays": 21, "until": "harvest-end", "notes": "Stop high-nitrogen feeds once fruit sets." }
     ],
     "water": "Deep watering 2-3x/week; daily in heat waves.",
+    "watering": [
+      { "start": "03-01", "end": "05-31", "everyDays": [3, 4], "amount": "Deep soak at the base", "notes": "Skip if it has rained." },
+      { "start": "06-01", "end": "10-31", "everyDays": 2, "amount": "Deep soak at the base", "notes": "Daily in heat waves." }
+    ],
     "sun": "Full sun, 6-8+ hours.",
     "spacing": "24 in apart, cage or stake at planting.",
     "soil": "pH 6.2-6.8; note any alkaline-soil amendments.",
