@@ -68,6 +68,41 @@
   button:hover, .btn:hover { opacity: .85; }
   button:focus-visible, .btn:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
 
+  .tag.water { background: var(--water); border-color: transparent; color: var(--paper); }
+
+  /* calendar */
+  .calbar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin-bottom: 12px; }
+  .seg { display: inline-flex; } .seg button { background: transparent; color: var(--ink); }
+  .seg button + button { border-left: 0; }
+  .seg button[aria-pressed=true] { background: var(--ink); color: var(--paper); }
+  .calnav { display: inline-flex; gap: 6px; } .calnav button { padding: 8px 12px; }
+  .calfilters { display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto; }
+  .calfilters button { background: transparent; color: var(--soft); border-color: var(--line); padding: 6px 10px 6px 8px; display: inline-flex; align-items: center; gap: 7px; font-weight: 500; }
+  .calfilters button[aria-pressed=true] { color: var(--ink); border-color: var(--ink); }
+  .calfilters i, .cm i { display: inline-block; width: 10px; height: 10px; }
+  .calfilters button[aria-pressed=false] i { opacity: .3; }
+  .k-feed { background: var(--clay); } .k-water { background: var(--water); } .k-sow { background: var(--leaf); } .k-other { background: var(--ochre); }
+  .calgrid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border: 1px solid var(--line); border-right: 0; border-bottom: 0; background: var(--card); }
+  .calgrid .dowh { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); padding: 8px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--ink); }
+  .cd { all: unset; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; text-align: left; min-height: 96px; padding: 6px 7px 8px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); cursor: pointer; font: 12px/1.35 var(--sans); color: var(--ink); min-width: 0; }
+  .calgrid.week .cd { min-height: 190px; }
+  .cd:hover { background: var(--paper); } .cd:focus-visible { outline: 2px solid var(--leaf); outline-offset: -2px; }
+  .cd.out { color: var(--faint); background: transparent; } .cd.out .ce { opacity: .55; }
+  .cd.sel { box-shadow: inset 0 0 0 2px var(--ink); }
+  .cd .n { font: 600 14px var(--serif); display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .cd.today .n span:first-child { background: var(--clay); color: var(--paper); padding: 0 6px; }
+  .cd .n small { font: 10.5px var(--mono); color: var(--faint); }
+  .ce { display: block; padding: 2px 5px; margin-top: 3px; border-left: 3px solid var(--line); background: var(--paper); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .calgrid.week .ce { white-space: normal; padding: 4px 6px; }
+  .ce.c-feed { border-color: var(--clay); } .ce.c-water { border-color: var(--water); } .ce.c-sow { border-color: var(--leaf); } .ce.c-other { border-color: var(--ochre); }
+  .ce.done { color: var(--faint); text-decoration: line-through; }
+  .ce.more { border: 0; background: transparent; color: var(--soft); padding-left: 0; }
+  .cm { display: none; }
+  .calday { margin-top: 14px; padding: 14px 16px; border: 1px solid var(--line); background: var(--card); }
+  .calday h3 { font: 600 17px var(--serif); margin: 0 0 6px; }
+  .calday .up { grid-template-columns: auto 1fr; } .calday .up .tag { align-self: start; margin-top: 2px; }
+  .calday .up .d { font-size: 13px; color: var(--soft); }
+
   /* plantings */
   .tablewrap { overflow-x: auto; border: 1px solid var(--line); background: var(--card); }
   table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
@@ -119,6 +154,17 @@
     main { padding: 24px 16px 60px; } h1 { font-size: 34px; }
     header.mast, .cols, .add { grid-template-columns: 1fr; }
     .wx { overflow-x: auto; justify-content: start; } .wx-note { text-align: left; }
+    .calfilters { margin-left: 0; }
+    .calgrid.month .cd { min-height: 58px; padding: 5px 4px; }
+    .calgrid.month .ce { display: none; }
+    .calgrid.month .cm { display: flex; flex-wrap: wrap; gap: 3px 5px; font: 10.5px var(--mono); color: var(--soft); }
+    .calgrid.month .cm span { display: inline-flex; align-items: center; gap: 2px; }
+    .calgrid .dowh { padding: 6px 4px; letter-spacing: 0; }
+    .calgrid.week { grid-template-columns: 1fr; }
+    .calgrid.week .dowh { display: none; }
+    .calgrid.week .cd { min-height: 0; display: grid; grid-template-columns: 74px 1fr; gap: 8px; padding: 10px; align-items: start; }
+    .calgrid.week .cd .n { display: block; margin: 0; }
+    .calgrid.week .cd .n small { display: block; }
   }
 </style>
 </head>
@@ -150,6 +196,17 @@
       <h2>Coming up <small>next 14 days</small></h2>
       <div id="upcoming"></div>
     </div>
+  </section>
+
+  <section>
+    <h2>Calendar <small id="cal-title"></small></h2>
+    <div class="calbar">
+      <div class="seg" role="group" aria-label="Calendar view"><button id="cal-week" aria-pressed="false">Week</button><button id="cal-month" aria-pressed="true">Month</button></div>
+      <div class="calnav"><button class="ghost" id="cal-prev" aria-label="Earlier">‹</button><button class="ghost" id="cal-now">Today</button><button class="ghost" id="cal-next" aria-label="Later">›</button></div>
+      <div class="calfilters" id="cal-filters" role="group" aria-label="Show on the calendar"></div>
+    </div>
+    <div id="cal"></div>
+    <div id="cal-day"></div>
   </section>
 
   <section>
@@ -215,7 +272,7 @@
   var now = new Date(); now.setHours(0, 0, 0, 0);
   var T = iso(now);
   var ACTIONABLE = { 'seed-prep': 1, sow: 1, 'harden-off': 1, transplant: 1, fertilize: 1 };
-  var TYPE_LABEL = { 'seed-prep': 'Seed prep', sow: 'Sow', germination: 'Germination', 'harden-off': 'Harden off', transplant: 'Transplant', fertilize: 'Feed', harvest: 'Harvest', 'window-open': 'Window' };
+  var TYPE_LABEL = { 'seed-prep': 'Seed prep', sow: 'Sow', germination: 'Germination', 'harden-off': 'Harden off', transplant: 'Transplant', fertilize: 'Feed', water: 'Water', harvest: 'Harvest', 'window-open': 'Window' };
 
   // local ticks
   var ticks = {};
@@ -247,13 +304,13 @@
     });
     return { today: today, overdue: overdue, upcoming: upcoming };
   }
-  var wxHold = null; // set by weather
+  var wxHold = null, wxWater = null; // set by weather
   function renderTasks() {
     var b = buckets(), all = b.overdue.map(function (e) { return [e, true]; }).concat(b.today.map(function (e) { return [e, false]; }));
     $('today-count').textContent = all.length ? all.length + (all.length === 1 ? ' task' : ' tasks') + (b.overdue.length ? ', ' + b.overdue.length + ' overdue' : '') : '';
     $('tasks').innerHTML = all.length ? all.map(function (x) {
       var e = x[0], od = x[1], ck = !!ticks[e.id];
-      var hold = (wxHold && e.type === 'fertilize') ? '<div class="hold">' + esc(wxHold) + '</div>' : '';
+      var hold = (wxHold && e.type === 'fertilize') ? '<div class="hold">' + esc(wxHold) + '</div>' : (wxWater && e.type === 'water') ? '<div class="hold">' + esc(wxWater) + '</div>' : '';
       return '<label class="task' + (od ? ' overdue' : '') + (ck ? ' checked' : '') + '" style="text-transform:none;letter-spacing:0;font:inherit;color:inherit;margin:0">' +
         '<input type="checkbox" data-id="' + esc(e.id) + '"' + (ck ? ' checked' : '') + '>' +
         '<span><span class="t">' + esc(e.title) + '</span>' +
@@ -280,7 +337,8 @@
     var lines = Object.keys(ticks).map(function (id) {
       var e = byId[id]; if (!e) return null;
       var rnd = e.round ? ' --round ' + e.round : '';
-      var cmd = (e.type === 'harvest' && e.milestone !== 'finished') ? 'harvest ' + e.plantingId + ' ' + ticks[id] + rnd + ' (add --amount if I say how much)'
+      var cmd = e.type === 'water' ? 'water ' + e.plantingId + ' ' + ticks[id]
+        : (e.type === 'harvest' && e.milestone !== 'finished') ? 'harvest ' + e.plantingId + ' ' + ticks[id] + rnd + ' (add --amount if I say how much)'
         : e.milestone ? 'log ' + e.plantingId + ' ' + e.milestone + ' ' + ticks[id] + rnd : 'done ' + id;
       return '- ' + e.title + ' (done ' + ticks[id] + ') → python3 scripts/garden.py ' + cmd;
     }).filter(Boolean);
@@ -322,7 +380,7 @@
     return head + (rows ? '<ul>' + rows + '</ul>' : (su.everyDays ? '<p class="soft">Pick a first sowing date to start the schedule.</p>' : ''));
   }
   function detail(p) {
-    var f = p.profile || {}, g = f.germination || {};
+    var f = p.profile || {}, g = f.germination || {}, c0 = p.computed || {};
     var rng = function (x, u) { return x == null ? '' : (Array.isArray(x) ? x[0] + '–' + x[1] : x) + u; };
     var feeds = (f.fertilizer || []).map(function (r) {
       var when = r.start === 'calendar' ? (r.dates || []).map(fmtMD).join(', ') : (r.offsetDays ? r.offsetDays + ' days after ' : 'at ') + (r.start || 'transplant') + (r.everyDays ? ', then every ' + r.everyDays + ' days' : '');
@@ -339,7 +397,7 @@
       block('Harvest log', harvestLog(p)) +
       block('Sowings', sowings(p)) +
       block('Feeding', feeds ? '<ul>' + feeds + '</ul>' : '') +
-      block('Water', f.water ? '<p>' + esc(f.water) + '</p>' : '') +
+      block('Water', (f.water || c0.nextWater) ? '<p>' + esc(f.water || '') + '</p>' + ((c0.nextWater || c0.lastWatered) ? '<p class="soft" style="margin-top:6px">' + esc([c0.lastWatered ? 'Last watered ' + fmt(c0.lastWatered) + '.' : '', c0.nextWater ? 'Next watering ' + fmt(c0.nextWater) + '.' : ''].filter(Boolean).join(' ')) + '</p>' : '') : '') +
       block('Sun &amp; spacing', (f.sun || f.spacing) ? '<p>' + esc([f.sun, f.spacing].filter(Boolean).join(' ')) + '</p>' : '') +
       block('Soil', f.soil ? '<p>' + esc(f.soil) + '</p>' : '') +
       block('Weather limits', (f.frostTenderBelowF != null || f.heatStressAboveF != null) ? '<p>' + esc([f.frostTenderBelowF != null ? 'Protect below ' + f.frostTenderBelowF + '°F.' : '', f.heatStressAboveF != null ? 'Heat stress above ' + f.heatStressAboveF + '°F.' : ''].join(' ')) + '</p>' : '') +
@@ -419,6 +477,78 @@
     }).join('') + '</tbody></table></div>' : '<div class="empty">' + (G.plantings.length ? 'No feedings due in the next 90 days.' : 'Feedings for each plant will be listed here by date.') + '</div>';
   }
 
+  // calendar: which days need feeding, watering and sowing
+  var CAL_KINDS = [['feed', 'Fertilizer'], ['water', 'Watering'], ['sow', 'Sowing'], ['other', 'Other tasks']];
+  var cal = { view: 'month', at: new Date(now), sel: T, show: { feed: true, water: true, sow: true, other: false } };
+  try { var cs = JSON.parse(localStorage.getItem('garden-cal') || 'null'); if (cs) { if (cs.view === 'week' || cs.view === 'month') cal.view = cs.view; if (cs.show) CAL_KINDS.forEach(function (k) { if (typeof cs.show[k[0]] === 'boolean') cal.show[k[0]] = cs.show[k[0]]; }); } } catch (e) {}
+  function calSave() { try { localStorage.setItem('garden-cal', JSON.stringify({ view: cal.view, show: cal.show })); } catch (e) {} }
+  function calKind(e) { return e.type === 'fertilize' ? 'feed' : e.type === 'water' ? 'water' : e.type === 'sow' ? 'sow' : e.type === 'window-open' ? null : 'other'; }
+  function calLabel(e, k) {
+    var who = e.plant + (e.round ? ' #' + e.round : '');
+    if (k === 'feed') return e.title.replace(/^Feed /, '').replace(/ \(sowing \d+\)/, '');
+    if (k === 'water') return who;
+    if (k === 'sow') return who;
+    return (TYPE_LABEL[e.type] || e.type) + ': ' + who;
+  }
+  function calRange() {
+    var a = new Date(cal.at), first, last;
+    if (cal.view === 'week') { first = addDays(a, -a.getDay()); last = addDays(first, 6); }
+    else { var m1 = new Date(a.getFullYear(), a.getMonth(), 1), m2 = new Date(a.getFullYear(), a.getMonth() + 1, 0); first = addDays(m1, -m1.getDay()); last = addDays(m2, 6 - m2.getDay()); }
+    return [first, last];
+  }
+  function renderCalendar() {
+    var r = calRange(), first = r[0], last = r[1], a = cal.at;
+    var byDay = {}, hidden = 0;
+    G.events.forEach(function (e) {
+      var k = calKind(e); if (!k) return;
+      if (e.date < iso(first) || e.date > iso(last)) return;
+      if (!cal.show[k]) { hidden++; return; }
+      (byDay[e.date] = byDay[e.date] || []).push([e, k]);
+    });
+    var order = { feed: 0, water: 1, sow: 2, other: 3 };
+    Object.keys(byDay).forEach(function (d) { byDay[d].sort(function (x, y) { return order[x[1]] - order[y[1]]; }); });
+    $('cal-title').textContent = cal.view === 'month' ? MON_LONG[a.getMonth()] + ' ' + a.getFullYear()
+      : MON[first.getMonth()] + ' ' + first.getDate() + ' – ' + (last.getMonth() !== first.getMonth() ? MON[last.getMonth()] + ' ' : '') + last.getDate() + ', ' + last.getFullYear();
+    $('cal-week').setAttribute('aria-pressed', String(cal.view === 'week')); $('cal-month').setAttribute('aria-pressed', String(cal.view === 'month'));
+    $('cal-filters').innerHTML = CAL_KINDS.map(function (k) { return '<button data-kind="' + k[0] + '" aria-pressed="' + !!cal.show[k[0]] + '"><i class="k-' + k[0] + '"></i>' + k[1] + '</button>'; }).join('');
+    var cap = cal.view === 'month' ? 3 : 99, h = DOW.map(function (d) { return '<div class="dowh">' + d + '</div>'; }).join('');
+    for (var d = new Date(first); d <= last; d = addDays(d, 1)) {
+      var key = iso(d), items = byDay[key] || [], counts = {};
+      items.forEach(function (x) { counts[x[1]] = (counts[x[1]] || 0) + 1; });
+      var chips = items.slice(0, cap).map(function (x) { var e = x[0]; return '<span class="ce c-' + x[1] + (e.done ? ' done' : '') + '" title="' + esc(e.title) + '">' + esc(KIND_VERB[x[1]] + calLabel(e, x[1])) + '</span>'; }).join('') +
+        (items.length > cap ? '<span class="ce more">+' + (items.length - cap) + ' more</span>' : '');
+      var marks = CAL_KINDS.filter(function (k) { return counts[k[0]]; }).map(function (k) { return '<span><i class="k-' + k[0] + '"></i>' + k[1].charAt(0) + (counts[k[0]] > 1 ? counts[k[0]] : '') + '</span>'; }).join('');
+      var say = DOW[d.getDay()] + ' ' + MON[d.getMonth()] + ' ' + d.getDate() + ': ' + (items.length ? CAL_KINDS.filter(function (k) { return counts[k[0]]; }).map(function (k) { return counts[k[0]] + ' ' + k[1].toLowerCase(); }).join(', ') : 'nothing scheduled');
+      h += '<button class="cd' + (cal.view === 'month' && d.getMonth() !== a.getMonth() ? ' out' : '') + (key === T ? ' today' : '') + (key === cal.sel ? ' sel' : '') + '" data-date="' + key + '" aria-label="' + esc(say) + '" aria-pressed="' + (key === cal.sel) + '">' +
+        '<span class="n"><span>' + d.getDate() + '</span><small>' + (cal.view === 'week' ? DOW[d.getDay()] : (d.getDate() === 1 ? MON[d.getMonth()] : '')) + '</small></span>' +
+        '<span class="items">' + chips + '</span><span class="cm">' + marks + '</span></button>';
+    }
+    $('cal').innerHTML = '<div class="calgrid ' + cal.view + '">' + h + '</div>';
+    // the chosen day in full
+    var sel = cal.sel, list = [];
+    G.events.forEach(function (e) { var k = calKind(e); if (k && e.date === sel && cal.show[k]) list.push([e, k]); });
+    list.sort(function (x, y) { return order[x[1]] - order[y[1]]; });
+    var sd = parse(sel);
+    $('cal-day').innerHTML = '<div class="calday"><h3>' + DOW[sd.getDay()] + ', ' + MON[sd.getMonth()] + ' ' + sd.getDate() + (sel === T ? ' <span class="soft" style="font:400 13px var(--sans)">today</span>' : '') + '</h3>' +
+      (list.length ? list.map(function (x) { var e = x[0]; return '<div class="up"><span class="tag ' + esc(e.type) + '">' + esc(TYPE_LABEL[e.type] || e.type) + '</span><span>' + (e.done ? '✓ ' : '') + esc(e.title) + (e.detail ? '<div class="d">' + esc(e.detail) + '</div>' : '') + '</span></div>'; }).join('')
+        : '<p class="soft" style="margin:0">Nothing ' + (hidden ? 'of the kinds switched on ' : '') + 'scheduled this day.</p>') + '</div>';
+  }
+  var MON_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var KIND_VERB = { feed: 'Feed ', water: 'Water ', sow: 'Sow ', other: '' };
+  function calMove(n) {
+    if (cal.view === 'week') cal.at = addDays(cal.at, 7 * n); else cal.at = new Date(cal.at.getFullYear(), cal.at.getMonth() + n, 1);
+    var r = calRange(); if (cal.sel < iso(r[0]) || cal.sel > iso(r[1]) || (cal.view === 'month' && parse(cal.sel).getMonth() !== cal.at.getMonth())) cal.sel = cal.view === 'week' ? iso(r[0]) : iso(new Date(cal.at.getFullYear(), cal.at.getMonth(), 1));
+    if (iso(r[0]) <= T && T <= iso(r[1]) && (cal.view === 'week' || now.getMonth() === cal.at.getMonth())) cal.sel = T;
+    renderCalendar();
+  }
+  $('cal-prev').onclick = function () { calMove(-1); };
+  $('cal-next').onclick = function () { calMove(1); };
+  $('cal-now').onclick = function () { cal.at = new Date(now); cal.sel = T; renderCalendar(); };
+  $('cal-week').onclick = function () { cal.view = 'week'; cal.at = parse(cal.sel); calSave(); renderCalendar(); };
+  $('cal-month').onclick = function () { cal.view = 'month'; cal.at = parse(cal.sel); calSave(); renderCalendar(); };
+  $('cal-filters').addEventListener('click', function (ev) { var b = ev.target.closest('button[data-kind]'); if (!b) return; var k = b.getAttribute('data-kind'); cal.show[k] = !cal.show[k]; calSave(); renderCalendar(); });
+  $('cal').addEventListener('click', function (ev) { var b = ev.target.closest('.cd'); if (!b) return; cal.sel = b.getAttribute('data-date'); if (cal.view === 'month' && parse(cal.sel).getMonth() !== cal.at.getMonth()) cal.at = parse(cal.sel); renderCalendar(); var f = $('cal').querySelector('.cd.sel'); if (f) f.focus({ preventScroll: true }); });
+
   // add plants
   function addPrompt() {
     var lines = $('add-list').value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
@@ -441,7 +571,7 @@
     var names = function (ps) { return ps.map(function (p) { return p.name; }).filter(function (v, i, a) { return a.indexOf(v) === i; }).join(', '); };
     var dayName = function (x, i) { return i === 0 ? 'today' : i === 1 ? 'tomorrow' : DOW[parse(x.date).getDay()]; };
     var rain48 = days.slice(0, 3).reduce(function (s, x) { return s + x.rain; }, 0);
-    if (rain48 >= 0.25) { wxHold = 'Rain coming (' + rain48.toFixed(2) + '″ by ' + dayName(days[2], 2) + ') — wait and feed after it passes.'; adv.push(['rain', '<b>Rain: ' + rain48.toFixed(2) + '″ through ' + dayName(days[2], 2) + '.</b> Skip irrigation and hold fertiliser until it passes so it is not washed out.']); }
+    if (rain48 >= 0.25) { wxWater = 'Rain is forecast (' + rain48.toFixed(2) + '″). Skip this watering if the soil is wet.'; wxHold = 'Rain coming (' + rain48.toFixed(2) + '″ by ' + dayName(days[2], 2) + ') — wait and feed after it passes.'; adv.push(['rain', '<b>Rain: ' + rain48.toFixed(2) + '″ through ' + dayName(days[2], 2) + '.</b> Skip irrigation and hold fertiliser until it passes so it is not washed out.']); }
     days.slice(0, 4).forEach(function (x, i) {
       var cold = active.filter(function (p) { var t = (p.profile || {}).frostTenderBelowF; return t != null && x.lo <= t; });
       if (cold.length) adv.push(['frost', '<b>Low of ' + Math.round(x.lo) + '°F ' + dayName(x, i) + '.</b> Cover or bring in: ' + esc(names(cold)) + '.']);
@@ -461,7 +591,7 @@
     fetch(url).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(renderWeather).catch(function () { $('wx-note').textContent = 'Forecast unavailable (offline?). Tasks are shown without weather adjustments.'; });
   }
 
-  renderTasks(); renderPlantings(); renderTimeline(); renderFeeding(); loadWeather();
+  renderTasks(); renderCalendar(); renderPlantings(); renderTimeline(); renderFeeding(); loadWeather();
   $('foot').textContent = window.GARDEN ? 'Schedule built ' + (G.generatedAt || '').replace('T', ' ') + ' from data/garden.json. Refresh after Claude updates it.' : 'data/garden-data.js not found — run: python3 scripts/garden.py build';
 })();
 </script>

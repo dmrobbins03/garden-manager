@@ -17,6 +17,8 @@
   var SOWN_METHODS = ['indoor-start', 'direct-sow'];
   var SUCCESSION_HORIZON_DAYS = 365;
   var SUCCESSION_MAX_ROUNDS = 60;
+  var WATER_HORIZON_DAYS = 400;
+  var WATER_HISTORY_DAYS = 60;
   var STAGE_RANK = ['harvesting', 'growing', 'seedling', 'germinating', 'planned', 'unscheduled'];
   var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -311,6 +313,50 @@
       });
     }
 
+    // watering: counted from the last logged watering, at the interval the season's rule gives
+    var rules = (prof.watering || []).filter(function (w) { return w.everyDays; });
+    var inGround = method === 'established' || rounds.some(function (r) { return ['germinating', 'seedling', 'growing', 'harvesting'].indexOf(r.stage) >= 0; });
+    var wset = {}; (p.watered || []).forEach(function (s) { wset[s] = 1; });
+    var watered = Object.keys(wset).sort();
+    var lastWatered = watered.length ? watered[watered.length - 1] : null;
+    var nextWater = null;
+    function pushWater(day, title, detail, isDone) {
+      var eid = p.id + ':water:' + day;
+      events.push({ id: eid, plantingId: p.id, plant: label, type: 'water', date: day, end: null, title: title, detail: detail,
+        milestone: null, round: null, done: !!(isDone || done[eid]), location: location });
+    }
+    var histFloor = addDays(today, -WATER_HISTORY_DAYS);
+    watered.forEach(function (s) { if (s >= histFloor) pushWater(s, 'Watered ' + label, '', true); });
+    if (rules.length && inGround) {
+      var ruleAt = function (day) { for (var i = 0; i < rules.length; i++) if (inWindow(day, rules[i])) return rules[i]; return null; };
+      var everyOf = function (w) { return Math.max(1, pyRound(mid(w.everyDays))); };
+      var detailOf = function (w) { return [w.amount, w.notes].filter(Boolean).join(' — '); };
+      var cursor = today, firstNote = '';
+      if (lastWatered) {
+        var w0 = ruleAt(lastWatered) || ruleAt(today);
+        cursor = w0 ? addDays(lastWatered, everyOf(w0)) : today;
+        if (cursor < today) { cursor = today; firstNote = 'Last watered ' + fmtBD(lastWatered) + '. '; }
+        else if (cursor === lastWatered) cursor = addDays(lastWatered, 1);
+      } else {
+        firstNote = 'No watering logged yet: water if the soil is dry a few inches down, then tick this to start the rhythm. ';
+      }
+      var wEnd = addDays(today, WATER_HORIZON_DAYS);
+      for (var k = 0; k < WATER_HORIZON_DAYS + 5; k++) {
+        var w = ruleAt(cursor);
+        if (!w) {
+          var nxt = snapToWindow(cursor, rules);
+          if (nxt === cursor) break;
+          cursor = nxt;
+          continue;
+        }
+        if (cursor > wEnd) break;
+        if (nextWater === null) nextWater = cursor;
+        pushWater(cursor, 'Water ' + label, firstNote + detailOf(w), false);
+        firstNote = '';
+        cursor = addDays(cursor, everyOf(w));
+      }
+    }
+
     var nextFeed = null;
     events.slice().sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; }).some(function (e) {
       if (e.type === 'fertilize' && !e.done && e.date >= today) { nextFeed = e.date; return true; }
@@ -323,6 +369,7 @@
       computed = {
         stage: r.stage, seedPrep: r.seedPrep, sow: r.sow, germination: r.germination, transplant: r.transplant,
         harvestStart: r.harvestStart, harvestEnd: r.harvestEnd, warnings: warnings, nextFeed: nextFeed,
+        nextWater: nextWater, lastWatered: lastWatered,
         harvests: { count: r.cuts, last: r.lastCut, nextCut: r.nextCut }
       };
       if (succ) computed.succession = { everyDays: succ.everyDays, nextSow: null, sown: 0 };
@@ -350,7 +397,7 @@
       stage: stage, warnings: warnings,
       seedPrep: focus.seedPrep, sow: focus.sow, germination: focus.germination, transplant: focus.transplant,
       harvestStart: starts.length ? starts[0] : null, harvestEnd: ends.length ? ends[ends.length - 1] : null,
-      nextFeed: nextFeed, rounds: rounds,
+      nextFeed: nextFeed, rounds: rounds, nextWater: nextWater, lastWatered: lastWatered,
       harvests: { count: picked.length, last: lastPicked.length ? lastPicked[lastPicked.length - 1] : null, nextCut: nextCuts.length ? nextCuts[0] : null },
       succession: { everyDays: every, nextSow: focus.sown ? null : focus.sow, sown: rounds.filter(function (x) { return x.sown; }).length }
     };
@@ -360,6 +407,10 @@
   // ---- whole garden
   function validate(p) {
     if (METHODS.indexOf(p.method || 'direct-sow') < 0) throw new Error(p.id + ': method must be one of ' + METHODS.join(', '));
+    (p.watered || []).forEach(function (s) { mustDate(s); });
+    ((p.profile || {}).watering || []).forEach(function (w) {
+      if (!w || typeof w !== 'object' || !w.start || !w.end || !w.everyDays) throw new Error(p.id + ': every profile.watering rule needs start, end (MM-DD) and everyDays');
+    });
     (p.harvests || []).forEach(function (h) {
       if (!h || typeof h !== 'object' || !h.date) throw new Error(p.id + ': every entry in harvests needs a date');
       mustDate(h.date);
@@ -522,6 +573,15 @@
     return { planting: p, round: entry.round || null, message: p.name + ': picking logged ' + date + (entry.round ? ' (sowing ' + entry.round + ')' : '') };
   }
 
+  function logWater(p0, date, today) {
+    var p = clone(p0);
+    date = mustDate(date || today || todayLocal());
+    var set = {}; (p.watered || []).concat([date]).forEach(function (s) { set[s] = 1; });
+    p.watered = Object.keys(set).sort().slice(-WATER_HISTORY_DAYS);
+    check(p, today);
+    return { planting: p, message: p.name + ': watered ' + date };
+  }
+
   function markDone(p0, eventIds) {
     var p = clone(p0);
     if (!p.done) p.done = [];
@@ -546,6 +606,6 @@
     isDate: isDate, addDays: addDays, todayLocal: todayLocal,
     successionOf: successionOf, schedule: schedule, build: build, tasksFor: tasksFor,
     preparePlanting: preparePlanting, logMilestone: logMilestone, logHarvest: logHarvest,
-    markDone: markDone, setPath: setPath, slug: slug
+    logWater: logWater, markDone: markDone, setPath: setPath, slug: slug
   };
 });

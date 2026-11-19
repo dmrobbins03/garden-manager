@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DATES = ["2026-11-18", "2026-11-19", "2026-12-28", "2027-02-28", "2027-03-16", "2027-06-01", "2027-10-02", "2028-02-29"]
 
-HERB = {"germination": {"days": [7, 14]}, "windows": [{"type": "direct-sow", "start": "10-01", "end": "03-15"}],
+HERB = {"watering": [{"start": "10-01", "end": "03-15", "everyDays": [2, 3], "amount": "keep moist"}], "germination": {"days": [7, 14]}, "windows": [{"type": "direct-sow", "start": "10-01", "end": "03-15"}],
         "daysToMaturity": {"days": [45, 55], "from": "sow"}, "harvestWeeks": 8, "harvestNotes": "Ready at 6 in.",
         "harvest": {"steps": ["Cut outer stems at the base."], "takeAtMost": "a third", "regrowDays": [7, 14]},
         "succession": {"everyDays": 21}, "frostTenderBelowF": 28, "heatStressAboveF": 85,
@@ -40,9 +40,11 @@ PLANTS = [
                  "fertilizer": [{"label": "f", "product": "p", "start": "germination", "offsetDays": 14}]}},
     {"name": "Pepper", "method": "nursery-transplant", "location": "Bed 3", "plan": {"transplantDate": "2027-04-10"},
      "profile": {"daysToMaturity": {"days": [70, 80], "from": "transplant"}, "windows": [{"type": "transplant", "start": "04-15", "end": "06-15"}]}},
-    {"name": "Longan", "method": "established", "profile": {"harvestSeason": {"start": "09-15", "end": "11-15"}, "frostTenderBelowF": 32,
+    {"name": "Longan", "method": "established", "profile": {"watering": [
+        {"start": "03-01", "end": "05-31", "everyDays": 7, "amount": "deep soak"}, {"start": "06-01", "end": "09-30", "everyDays": [3, 5], "notes": "more in heat"},
+        {"start": "10-01", "end": "11-30", "everyDays": 7}, {"start": "12-01", "end": "02-28", "everyDays": [14, 21], "notes": "only if dry"}], "harvestSeason": {"start": "09-15", "end": "11-15"}, "frostTenderBelowF": 32,
                                                               "fertilizer": [{"label": "c", "product": "EDDHA", "start": "calendar", "dates": ["03-15", "06-15"]}]}},
-    {"name": "Lime", "method": "established", "profile": {"harvestSeason": {"start": "08-01", "end": "03-31"}, "harvestNotes": "Green."}},
+    {"name": "Lime", "method": "established", "profile": {"watering": [{"start": "03-01", "end": "11-30", "everyDays": [7, 14]}], "harvestSeason": {"start": "08-01", "end": "03-31"}, "harvestNotes": "Green."}},
     {"name": "Dill", "method": "direct-sow", "profile": {"windows": [{"type": "direct-sow", "start": "10-01", "end": "04-15"}], "succession": {"everyDays": 28}}},
     {"name": "Cilantro", "location": "Bed 2", "method": "direct-sow", "plan": {"sowDate": "2026-10-06"}, "profile": HERB},
     {"name": "Green onion", "method": "indoor-start", "plan": {"sowDate": "2026-09-01"}, "succession": {"everyDays": 14, "count": 9},
@@ -82,7 +84,13 @@ STEPS = [
     (["set", "parsley-giant-italian-2", "succession.everyDays", "30"], {"op": "set", "id": "parsley-giant-italian-2", "path": "succession.everyDays", "value": 30}),
     (["set", "parsley-giant-italian-2", "succession", "null"], {"op": "set", "id": "parsley-giant-italian-2", "path": "succession", "value": None}),
     (["log", "tomato-sungold", "sown", "2027-01-22"], {"op": "log", "id": "tomato-sungold", "milestone": "sown", "date": "2027-01-22"}),
-    (["remove", "lime"], {"op": "remove", "id": "lime"}),
+    (["water", "longan", "2026-11-10"], {"op": "water", "id": "longan", "date": "2026-11-10"}),
+    (["water", "longan", "2026-11-17"], {"op": "water", "id": "longan", "date": "2026-11-17"}),
+    (["water", "longan", "2026-11-17"], {"op": "water", "id": "longan", "date": "2026-11-17"}),
+    (["water", "lime", "2026-11-19"], {"op": "water", "id": "lime", "date": "2026-11-19"}),
+    (["water", "cilantro", "2026-11-18"], {"op": "water", "id": "cilantro", "date": "2026-11-18"}),
+    (["water", "lime", "2026-12-20"], {"op": "water", "id": "lime", "date": "2026-12-20"}),
+    (["remove", "pepper"], {"op": "remove", "id": "pepper"}),
 ]
 
 

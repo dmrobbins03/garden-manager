@@ -37,6 +37,10 @@
       { "label": "Side-dress", "product": "Low-N tomato feed 3-4-6", "amount": "per label", "start": "transplant", "offsetDays": 21, "everyDays": 21, "until": "harvest-end", "notes": "Stop high-nitrogen feeds once fruit sets." }
     ],
     "water": "Deep watering 2-3x/week; daily in heat waves.",
+    "watering": [
+      { "start": "03-01", "end": "05-31", "everyDays": [3, 4], "amount": "Deep soak at the base", "notes": "Skip if it has rained." },
+      { "start": "06-01", "end": "10-31", "everyDays": 2, "amount": "Deep soak at the base", "notes": "Daily in heat waves." }
+    ],
     "sun": "Full sun, 6-8+ hours.",
     "spacing": "24 in apart, cage or stake at planting.",
     "soil": "pH 6.2-6.8; note any alkaline-soil amendments.",

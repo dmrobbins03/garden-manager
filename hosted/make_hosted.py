@@ -126,6 +126,7 @@ cut("""  $('tasks').addEventListener('change', function (ev) {""", """  // plant
     ev.target.disabled = true;
     var p = store.plantings[e.plantingId];
     change(e.plantingId, function () {
+      if (e.type === 'water') return S.logWater(p, T, T);
       if (e.type === 'harvest' && e.milestone !== 'finished') return S.logHarvest(p, T, { round: e.round || undefined }, T);
       if (e.milestone) return S.logMilestone(p, e.milestone, T, e.round || undefined, T);
       return S.markDone(p, [e.id]);
@@ -138,15 +139,16 @@ cut("""  $('tasks').addEventListener('change', function (ev) {""", """  // plant
 rep("""      '</div><p class="mono faint" style="margin:14px 0 0">id: ' + esc(p.id) + '</p>';""",
     """      '</div>' + logRow(p) + '<p class="mono faint" style="margin:14px 0 0">id: ' + esc(p.id) + '</p>';""")
 rep("""  function detail(p) {
-    var f = p.profile || {}, g = f.germination || {};""", """  function logRow(p) {
+    var f = p.profile || {}, g = f.germination || {}, c0 = p.computed || {};""", """  function logRow(p) {
     var c = p.computed || {}, st = c.stage, h = '';
     var inGround = st === 'established' || st === 'harvesting' || st === 'growing';
     if (inGround) h += '<input type="text" data-amount placeholder="How much? (optional)" aria-label="Amount picked"><button data-act="harvest">Log a picking today</button>';
+    if (inGround && ((p.profile || {}).watering || []).length) h += '<button class="ghost" data-act="water">Log a watering today</button>';
     if ((c.succession || {}).everyDays && p.plan && (p.plan.sowDate || c.rounds)) h += '<button class="ghost" data-act="sow">Log a sowing today</button>';
     return h ? '<div class="logrow" data-id="' + esc(p.id) + '">' + h + '</div>' : '';
   }
   function detail(p) {
-    var f = p.profile || {}, g = f.germination || {};""")
+    var f = p.profile || {}, g = f.germination || {}, c0 = p.computed || {};""")
 rep("""        return '<tr class="row" data-i="' + i + '" tabindex="0" aria-expanded="false"><td>""",
     """        var open = !!openRows[p.id];
         return '<tr class="row" data-i="' + i + '" data-pid="' + esc(p.id) + '" tabindex="0" aria-expanded="' + open + '"><td>""")
@@ -163,25 +165,26 @@ rep("""  function toggle(tr) { var d = tr.nextElementSibling; d.hidden = !d.hidd
       var amt = row.querySelector('[data-amount]'), amount = amt ? amt.value.trim() : '';
       btn.disabled = true;
       if (btn.getAttribute('data-act') === 'harvest') change(pid, function () { return S.logHarvest(p, T, { amount: amount || undefined }, T); }, 'Saved a picking for ' + p.name + (amount ? ' (' + amount + ')' : '')).catch(function () {});
+      else if (btn.getAttribute('data-act') === 'water') change(pid, function () { return S.logWater(p, T, T); }, 'Saved a watering for ' + p.name).catch(function () {});
       else change(pid, function () { return S.logMilestone(p, 'sown', T, undefined, T); }, 'Saved a sowing for ' + p.name).catch(function () {});
       return;
     }
     var tr = ev.target.closest('tr.row'); if (tr) toggle(tr);
   });""")
 rep("""✓ marks dates you have logged; the rest are projections. Repeat-sown plants show their next sowing; the care sheet lists every sowing.</p>';""",
-    """✓ marks dates you have logged; the rest are projections. Repeat-sown plants show their next sowing; the care sheet lists every sowing and has the buttons for logging a picking or a sowing.</p>';""")
+    """✓ marks dates you have logged; the rest are projections. Repeat-sown plants show their next sowing; the care sheet lists every sowing and has the buttons for logging a picking, a watering or a sowing.</p>';""")
 rep("""$('plantings').innerHTML = '<div class="empty">Your garden is empty.""", """$('plantings').innerHTML = '<div class="empty">' + (store.loaded ? '' : 'Loading… ') + 'Your garden is empty.""")
 
 # ---------- add plants + weather + init
 cut("""  // add plants""", """  // weather""", "")
 rep("""    $('wx-note').textContent = (site.location || '') + ' · Open-Meteo forecast';""",
     """    $('wx-note').textContent = (site.location || '') + ' · forecast checked ' + (w.fetchedAt ? fmtWhen(w.fetchedAt) : 'earlier');""")
-rep("""    var adv = [], active = G.plantings.filter(""", """    wxHold = null;
+rep("""    var adv = [], active = G.plantings.filter(""", """    wxHold = null; wxWater = null;
     var adv = [], active = G.plantings.filter(""")
 rep("""    var d = w.daily, days = d.time.map(function (t, i) {""", """    var d = w.daily, days = d.time.map(function (t, i) {""")
 rep(""" : 0 }; });
     $('wx').innerHTML = days.map(""", """ : 0 }; }).filter(function (x) { return x.date >= T; });
-    if (!days.length) { $('wx').innerHTML = ''; $('advisories').innerHTML = ''; $('wx-note').textContent = 'The saved forecast is out of date. It refreshes with the next background check.'; wxHold = null; renderTasks(); return; }
+    if (!days.length) { $('wx').innerHTML = ''; $('advisories').innerHTML = ''; $('wx-note').textContent = 'The saved forecast is out of date. It refreshes with the next background check.'; wxHold = null; wxWater = null; renderTasks(); return; }
     $('wx').innerHTML = days.map(""")
 rep("""by ' + dayName(days[2], 2) + ')""", """by ' + dayName(days[Math.min(2, days.length - 1)], Math.min(2, days.length - 1)) + ')""")
 rep("""″ through ' + dayName(days[2], 2) + '.</b>""", """″ through ' + dayName(days[Math.min(2, days.length - 1)], Math.min(2, days.length - 1)) + '.</b>""")
@@ -190,7 +193,7 @@ cut("""  function loadWeather() {""", """</script>
   function renderWx() {
     var w = store.weather;
     if (w && w.daily && w.daily.time && w.daily.time.length) { try { renderWeather(w); return; } catch (e) {} }
-    $('wx').innerHTML = ''; $('advisories').innerHTML = ''; wxHold = null;
+    $('wx').innerHTML = ''; $('advisories').innerHTML = ''; wxHold = null; wxWater = null;
     $('wx-note').textContent = store.loaded ? 'No forecast saved yet. The background agent adds it on its next check.' : '';
     renderTasks();
   }
@@ -211,7 +214,7 @@ cut("""  function loadWeather() {""", """</script>
     try { G = S.build({ site: store.site, plantings: plantingList() }, T); }
     catch (e) { say('The schedule could not be worked out: ' + e.message, true); return; }
     site = store.site || {};
-    renderMast(); renderTasks(); renderPlantings(); renderTimeline(); renderFeeding(); renderWx(); renderRequests();
+    renderMast(); renderTasks(); renderCalendar(); renderPlantings(); renderTimeline(); renderFeeding(); renderWx(); renderRequests();
     $('foot').textContent = store.loaded ? 'Your garden data is saved with this page. Changes show here straight away, on any device.' : '';
   }
   function plantingList() {
@@ -318,6 +321,7 @@ cut("""  function loadWeather() {""", """</script>
       if (c.harvestStart) bits.push('harvest ' + c.harvestStart + ' to ' + (c.harvestEnd || '?'));
       if ((c.harvests || {}).count) bits.push(c.harvests.count + ' pickings, last ' + c.harvests.last);
       if (c.nextFeed) bits.push('next feed ' + c.nextFeed);
+      if (c.nextWater) bits.push('next watering ' + c.nextWater + (c.lastWatered ? ', last watered ' + c.lastWatered : ''));
       return '- ' + bits.filter(Boolean).join('; ');
     }).join('\n') || '(no plants yet)';
   }
@@ -347,9 +351,12 @@ cut("""  function loadWeather() {""", """</script>
     { name: 'log_harvest', description: 'Record one picking or cut from a plant, with the amount if the gardener gave one. Returns a confirmation.',
       inputSchema: { type: 'object', properties: { id: { type: 'string' }, date: { type: 'string', description: 'YYYY-MM-DD, default today' }, amount: { type: 'string' }, note: { type: 'string' }, sowing: { type: 'number' } }, required: ['id'] },
       execute: function (i) { var p = need(i.id), d = dateArg(i.date); doing('Recording a picking for ' + p.name + '…'); return change(p.id, function () { return S.logHarvest(p, d, { amount: i.amount ? String(i.amount) : undefined, note: i.note ? String(i.note) : undefined, round: i.sowing ? Number(i.sowing) : undefined }, T); }).then(function (r) { return r.message; }); } },
+    { name: 'log_watering', description: 'Record that a plant was watered. The next watering on the calendar is counted from this date. Returns a confirmation.',
+      inputSchema: { type: 'object', properties: { id: { type: 'string' }, date: { type: 'string', description: 'YYYY-MM-DD, default today' } }, required: ['id'] },
+      execute: function (i) { var p = need(i.id), d = dateArg(i.date); doing('Recording a watering for ' + p.name + '…'); return change(p.id, function () { return S.logWater(p, d, T); }).then(function (r) { return r.message; }); } },
     { name: 'mark_task_done', description: 'Tick off a task that has no milestone, such as a feeding, by its event id from list_tasks. Returns a confirmation.',
       inputSchema: { type: 'object', properties: { eventId: { type: 'string' } }, required: ['eventId'] },
-      execute: function (i) { var eid = String(i.eventId), e = null; G.events.forEach(function (x) { if (x.id === eid) e = x; }); if (!e) throw new Error('No task with that id; call list_tasks.'); if (e.milestone) throw new Error('That task is a milestone; use log_milestone or log_harvest.'); var p = need(e.plantingId); doing('Ticking off ' + e.title + '…'); return change(p.id, function () { return S.markDone(p, [eid]); }, 'Saved: ' + e.title).then(function () { return 'Done: ' + e.title; }); } },
+      execute: function (i) { var eid = String(i.eventId), e = null; G.events.forEach(function (x) { if (x.id === eid) e = x; }); if (!e) throw new Error('No task with that id; call list_tasks.'); if (e.milestone) throw new Error('That task is a milestone; use log_milestone or log_harvest.'); if (e.type === 'water') throw new Error('Use log_watering for watering.'); var p = need(e.plantingId); doing('Ticking off ' + e.title + '…'); return change(p.id, function () { return S.markDone(p, [eid]); }, 'Saved: ' + e.title).then(function () { return 'Done: ' + e.title; }); } },
     { name: 'set_field', description: 'Change a setting on a plant. path is one of: ' + SETTABLE.join(', ') + '. Dates are YYYY-MM-DD. succession.everyDays turns repeat sowing on or changes its interval; succession with value null stops it; succession.nextSowDate moves only the next sowing. Returns a confirmation.',
       inputSchema: { type: 'object', properties: { id: { type: 'string' }, path: { type: 'string', enum: SETTABLE }, value: {} }, required: ['id', 'path', 'value'] },
       execute: function (i) { var p = need(i.id), path = String(i.path); if (SETTABLE.indexOf(path) < 0) throw new Error('path must be one of ' + SETTABLE.join(', ')); var v = i.value; if (/Date$/.test(path) && v !== null && !S.isDate(String(v))) throw new Error('value must be a YYYY-MM-DD date'); if (path === 'succession' && v !== null) throw new Error('Use succession.everyDays to turn repeat sowing on; succession accepts only null.'); if (/everyDays$|count$|^quantity$/.test(path)) v = Number(v); doing('Updating ' + p.name + '…'); return change(p.id, function () { return S.setPath(p, path, v, T); }).then(function (r) { return r.message; }); } },

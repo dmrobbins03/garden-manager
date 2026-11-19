@@ -7,7 +7,7 @@
  *   node hosted/cli.js apply GARDEN.json OPS.json [--date D]          apply changes, print the changed garden
  *
  * GARDEN.json is {"site": {...}, "plantings": [...]}.
- * OPS.json is a list of {"op": "log"|"harvest"|"done"|"set"|"add"|"remove", ...}.
+ * OPS.json is a list of {"op": "log"|"harvest"|"water"|"done"|"set"|"add"|"remove", ...}.
  */
 'use strict';
 var fs = require('fs');
@@ -31,6 +31,7 @@ function applyOps(g, ops, today) {
     var p = g.plantings[i], r;
     if (o.op === 'log') r = S.logMilestone(p, o.milestone, o.date, o.round, today);
     else if (o.op === 'harvest') r = S.logHarvest(p, o.date, { amount: o.amount, note: o.note, round: o.round }, today);
+    else if (o.op === 'water') r = S.logWater(p, o.date, today);
     else if (o.op === 'done') r = S.markDone(p, o.eventIds);
     else if (o.op === 'set') r = S.setPath(p, o.path, o.value, today);
     else throw new Error('unknown op ' + o.op);

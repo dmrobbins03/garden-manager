@@ -9,6 +9,7 @@
                                                (on a repeat-sown planting, `sown` starts the next sowing)
   garden.py harvest ID [YYYY-MM-DD] [--amount TEXT] [--note TEXT] [--round N]
                                                record one picking or cut (the first also sets firstHarvest)
+  garden.py water ID [YYYY-MM-DD]              record a watering; the next one is counted from it
   garden.py done EVENT_ID [EVENT_ID ...]       tick off a task (e.g. a feeding)
   garden.py set ID PATH VALUE                  e.g. set tomato-sungold plan.sowDate 2027-01-20
                                                set cilantro succession.everyDays 21   (resow every 3 weeks)
@@ -33,6 +34,8 @@ OVERDUE_DAYS = 21
 SOWN_METHODS = ("indoor-start", "direct-sow")
 SUCCESSION_HORIZON_DAYS = 365
 SUCCESSION_MAX_ROUNDS = 60
+WATER_HORIZON_DAYS = 400
+WATER_HISTORY_DAYS = 60
 STAGE_RANK = ["harvesting", "growing", "seedling", "germinating", "planned", "unscheduled"]
 
 
@@ -363,6 +366,53 @@ def schedule(p, today):
                     "milestone": None, "round": None, "done": eid in done, "location": p.get("location") or "",
                 })
 
+    # watering: counted from the last logged watering, at the interval the season's rule gives
+    rules = [w for w in prof.get("watering") or [] if w.get("everyDays")]
+    in_ground = method == "established" or any(r["stage"] in ("germinating", "seedling", "growing", "harvesting") for r in rounds)
+    watered = sorted(set(p.get("watered") or []))
+    last_watered = d(watered[-1]) if watered else None
+    next_water = None
+
+    def push_water(day, title, detail, is_done):
+        eid = f"{p['id']}:water:{day.isoformat()}"
+        events.append({"id": eid, "plantingId": p["id"], "plant": label, "type": "water", "date": day.isoformat(), "end": None,
+                       "title": title, "detail": detail, "milestone": None, "round": None,
+                       "done": bool(is_done or eid in done), "location": p.get("location") or ""})
+
+    for s in watered:
+        if d(s) >= today - dt.timedelta(days=WATER_HISTORY_DAYS):
+            push_water(d(s), f"Watered {label}", "", True)
+    if rules and in_ground:
+        rule_at = lambda day: next((w for w in rules if in_window(day, w)), None)
+        every_of = lambda w: max(1, round(mid(w["everyDays"])))
+        detail_of = lambda w: " — ".join(x for x in [w.get("amount"), w.get("notes")] if x)
+        cursor, first_note = today, ""
+        if last_watered:
+            w = rule_at(last_watered) or rule_at(today)
+            cursor = last_watered + dt.timedelta(days=every_of(w)) if w else today
+            if cursor < today:
+                cursor, first_note = today, f"Last watered {last_watered.strftime('%b %-d')}. "
+            elif cursor == last_watered:
+                cursor = last_watered + dt.timedelta(days=1)
+        else:
+            first_note = "No watering logged yet: water if the soil is dry a few inches down, then tick this to start the rhythm. "
+        end = today + dt.timedelta(days=WATER_HORIZON_DAYS)
+        for _ in range(WATER_HORIZON_DAYS + 5):
+            w = rule_at(cursor)
+            if not w:
+                nxt = snap_to_window(cursor, rules)
+                if nxt == cursor:
+                    break
+                cursor = nxt
+                continue
+            if cursor > end:
+                break
+            if next_water is None:
+                next_water = cursor
+            push_water(cursor, f"Water {label}", first_note + detail_of(w), False)
+            first_note = ""
+            cursor += dt.timedelta(days=every_of(w))
+
     next_feed = next((e["date"] for e in sorted(events, key=lambda e: e["date"])
                       if e["type"] == "fertilize" and not e["done"] and e["date"] >= today.isoformat()), None)
 
@@ -370,6 +420,7 @@ def schedule(p, today):
         r = rounds[0]
         computed = {k: r[k] for k in ("stage", "seedPrep", "sow", "germination", "transplant", "harvestStart", "harvestEnd")}
         computed.update({"warnings": warnings, "nextFeed": next_feed,
+                         "nextWater": iso(next_water), "lastWatered": iso(last_watered),
                          "harvests": {"count": r["cuts"], "last": r["lastCut"], "nextCut": r["nextCut"]}})
         if succ:
             computed["succession"] = {"everyDays": succ["everyDays"], "nextSow": None, "sown": 0}
@@ -390,7 +441,7 @@ def schedule(p, today):
         "seedPrep": focus["seedPrep"], "sow": focus["sow"], "germination": focus["germination"],
         "transplant": focus["transplant"],
         "harvestStart": min(starts) if starts else None, "harvestEnd": max(ends) if ends else None,
-        "nextFeed": next_feed, "rounds": rounds,
+        "nextFeed": next_feed, "rounds": rounds, "nextWater": iso(next_water), "lastWatered": iso(last_watered),
         "harvests": {"count": len(picked), "last": max((h["date"] for h in picked), default=None),
                      "nextCut": min((r["nextCut"] for r in live if r["nextCut"]), default=None)},
         "succession": {"everyDays": every, "nextSow": None if focus["sown"] else focus["sow"],
@@ -408,6 +459,12 @@ def build(g, today=None):
         seen.add(p["id"])
         if p.get("method", "direct-sow") not in METHODS:
             sys.exit(f"{p['id']}: method must be one of {METHODS}")
+        for s in p.get("watered") or []:
+            d(s)
+        for w in (p.get("profile") or {}).get("watering") or []:
+            if not isinstance(w, dict) or not w.get("start") or not w.get("end") or not w.get("everyDays"):
+                sys.exit(f"{p['id']}: every profile.watering rule needs start, end (MM-DD) and everyDays")
+            md(w["start"], 2024), md(w["end"], 2024)
         for h in p.get("harvests") or []:
             if not isinstance(h, dict) or not h.get("date"):
                 sys.exit(f"{p['id']}: every entry in harvests needs a date")
@@ -579,6 +636,19 @@ def cmd_harvest(a):
           + (", this sowing is used up" if r and r["spent"] else ""))
 
 
+def cmd_water(a):
+    g = load()
+    p = find(g, a.id)
+    date = a.date or dt.date.today().isoformat()
+    d(date)
+    p["watered"] = sorted(set((p.get("watered") or []) + [date]))[-WATER_HISTORY_DAYS:]
+    build(g)
+    save(g)
+    out = write_js(g)
+    c = next(x for x in out["plantings"] if x["id"] == a.id)["computed"]
+    print(f"{a.id}: watered {date}" + (f", next about {c['nextWater']}" if c.get("nextWater") else ""))
+
+
 def cmd_done(a):
     g = load()
     for eid in a.event_ids:
@@ -626,6 +696,7 @@ def cmd_list(a):
               f"harvest={c['harvestStart'] or '-':10} nextFeed={c['nextFeed'] or '-'}"
               + (f"  resow every {c['succession']['everyDays']}d ({c['succession']['sown']} sown, "
                  f"next {c['succession']['nextSow'] or '-'})" if (c.get("succession") or {}).get("everyDays") else "")
+              + (f"  water {c['nextWater']}" if c.get("nextWater") else "")
               + (f"  picked {c['harvests']['count']}x, last {c['harvests']['last']}" if c["harvests"]["count"] else ""))
     if not out["plantings"]:
         print("(no plantings yet)")
@@ -699,6 +770,7 @@ def main():
     sub.add_parser("list").set_defaults(fn=cmd_list)
     s = sub.add_parser("log"); s.add_argument("id"); s.add_argument("milestone"); s.add_argument("date", nargs="?"); s.add_argument("--round", type=int); s.set_defaults(fn=cmd_log)
     s = sub.add_parser("harvest"); s.add_argument("id"); s.add_argument("date", nargs="?"); s.add_argument("--amount"); s.add_argument("--note"); s.add_argument("--round", type=int); s.set_defaults(fn=cmd_harvest)
+    s = sub.add_parser("water"); s.add_argument("id"); s.add_argument("date", nargs="?"); s.set_defaults(fn=cmd_water)
     s = sub.add_parser("done"); s.add_argument("event_ids", nargs="+"); s.set_defaults(fn=cmd_done)
     s = sub.add_parser("set"); s.add_argument("id"); s.add_argument("path"); s.add_argument("value"); s.set_defaults(fn=cmd_set)
     s = sub.add_parser("remove"); s.add_argument("id"); s.set_defaults(fn=cmd_remove)

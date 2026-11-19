@@ -93,7 +93,7 @@
         ],
         "companions": [],
         "avoidNear": [],
-        "notes": "Cultivar unknown, so this profile is for the species Acer palmatum in general; red-leaf and lace-leaf (dissectum) types usually scorch more easily than green upright types, and mature size varies widely by cultivar. Treated as an established in-ground tree in native alkaline soil. PRUNING WINDOW (Pasadena): do structural pruning while the tree is fully leafless and dormant, about Dec 15 - Jan 31, before buds swell in February; maples bleed sap if cut as sap rises in late winter/early spring, and tender new bark tears easily then. Light thinning or removal of water sprouts is fine in early summer (June), but do not open the canopy or prune hard in the heat of Jul-Oct (bark sunburn, Santa Ana stress). Never remove more than about 20% of the canopy in a year; dead wood can come out any time. Sources disagree: Sunset says prune in summer or early fall in mild-winter areas to limit sap bleed, and Mendocino Maples says mid-July through August; Pacific Horticulture and Mr Maple say winter dormancy for structural work and to avoid the full heat of summer. The winter window above is the more conservative reading for inland heat. FROST: the dormant tree is fully hardy to anything Pasadena gets; 32 F matters only after leaf-out (roughly late Feb-Apr), when a freeze can kill new growth - drape with a sheet or frost cloth overnight. HEAT: the alert threshold is set at 95 F, a practical level for Pasadena that is not from a source; 85 F is a general onset-of-heat-stress figure for landscape trees and shrubs from Rutgers (New Jersey), the only sourced number found; in Pasadena it will be exceeded most days Jun-Oct. WATER: Pasadena Water and Power reports average hardness of 12.9 grains per gallon ('very hard'). Unverified: no source gave a Japanese-maple-specific heat threshold; a practical alert level here may be nearer 95 F. Unverified: exact watering depth in inches and gallons per watering for a 6 ft tree (sources say only 'deep' and 'whole root zone'); the seasonal intervals outside summer are extrapolated from the 7-10 day established-tree figure. Unverified: fertilizer amount for a 6 ft tree, and the specific calendar dates for feeding (03-15), chelate (04-15), mulch (05-01) and leaching (06-15, 09-01), which are scheduling choices fitted to Pasadena, not source dates. Unverified: the Dec 15 - Jan 31 dormancy dates for Pasadena are an inference from local leaf-drop timing. Unverified: whether chlorine/chloramine in Pasadena tap water harms Japanese maples (PWP says only that chlorine and chloramine are used as disinfectants); the documented water problem is hardness and salts. Unverified: which chelate form (e.g. EDDHA) works best at this soil pH - UC IPM says only to follow the label. Unverified: gypsum top-dressing for salts (Roger's Gardens recommends it; UC IPM says amendments cannot fix saline soil and gypsum helps only sodic soil - get a soil test first). Unverified: invasive shot hole borer risk to this tree in the San Gabriel Valley was not checked. Not opened: Cal Poly SelecTree (needs JavaScript) and Missouri Botanical Garden Plant Finder (blocked), so no data is taken from them.",
+        "notes": "Cultivar unknown, so this profile is for the species Acer palmatum in general; red-leaf and lace-leaf (dissectum) types usually scorch more easily than green upright types, and mature size varies widely by cultivar. Treated as an established in-ground tree in native alkaline soil. PRUNING WINDOW (Pasadena): do structural pruning while the tree is fully leafless and dormant, about Dec 15 - Jan 31, before buds swell in February; maples bleed sap if cut as sap rises in late winter/early spring, and tender new bark tears easily then. Light thinning or removal of water sprouts is fine in early summer (June), but do not open the canopy or prune hard in the heat of Jul-Oct (bark sunburn, Santa Ana stress). Never remove more than about 20% of the canopy in a year; dead wood can come out any time. Sources disagree: Sunset says prune in summer or early fall in mild-winter areas to limit sap bleed, and Mendocino Maples says mid-July through August; Pacific Horticulture and Mr Maple say winter dormancy for structural work and to avoid the full heat of summer. The winter window above is the more conservative reading for inland heat. FROST: the dormant tree is fully hardy to anything Pasadena gets; 32 F matters only after leaf-out (roughly late Feb-Apr), when a freeze can kill new growth - drape with a sheet or frost cloth overnight. HEAT: the alert threshold is set at 95 F, a practical level for Pasadena that is not from a source; 85 F is a general onset-of-heat-stress figure for landscape trees and shrubs from Rutgers (New Jersey), the only sourced number found; in Pasadena it will be exceeded most days Jun-Oct. WATER: Pasadena Water and Power reports average hardness of 12.9 grains per gallon ('very hard'). Unverified: no source gave a Japanese-maple-specific heat threshold; a practical alert level here may be nearer 95 F. Unverified: exact watering depth in inches and gallons per watering for a 6 ft tree (sources say only 'deep' and 'whole root zone'); the seasonal intervals outside summer are extrapolated from the 7-10 day established-tree figure. Unverified: fertilizer amount for a 6 ft tree, and the specific calendar dates for feeding (03-15), chelate (04-15), mulch (05-01) and leaching (06-15, 09-01), which are scheduling choices fitted to Pasadena, not source dates. Unverified: the Dec 15 - Jan 31 dormancy dates for Pasadena are an inference from local leaf-drop timing. Unverified: whether chlorine/chloramine in Pasadena tap water harms Japanese maples (PWP says only that chlorine and chloramine are used as disinfectants); the documented water problem is hardness and salts. Unverified: which chelate form (e.g. EDDHA) works best at this soil pH - UC IPM says only to follow the label. Unverified: gypsum top-dressing for salts (Roger's Gardens recommends it; UC IPM says amendments cannot fix saline soil and gypsum helps only sodic soil - get a soil test first). Unverified: invasive shot hole borer risk to this tree in the San Gabriel Valley was not checked. Not opened: Cal Poly SelecTree (needs JavaScript) and Missouri Botanical Garden Plant Finder (blocked), so no data is taken from them. Watering schedule: the calendar uses 10-14 days for Mar-May and November, 7-10 days for Jun-Oct, and nothing from December to February (water only in long dry spells). The month boundaries are a reading of the 'water' text, which says spring, summer to early autumn and late autumn without dates.",
         "sources": [
           {
             "title": "Acer palmatum (Japanese Maple) - Sunset Plant Finder",
@@ -166,6 +166,38 @@
           {
             "title": "Water Quality FAQs - Pasadena Water and Power",
             "url": "https://pwp.cityofpasadena.net/waterqualityfaqs/"
+          }
+        ],
+        "watering": [
+          {
+            "start": "03-01",
+            "end": "05-31",
+            "everyDays": [
+              10,
+              14
+            ],
+            "amount": "Long, slow soak of the whole root zone",
+            "notes": "Skip if it has rained. Check that the top few inches have dried first."
+          },
+          {
+            "start": "06-01",
+            "end": "10-31",
+            "everyDays": [
+              7,
+              10
+            ],
+            "amount": "Long, slow soak of the whole root zone",
+            "notes": "About twice a week during heat waves and Santa Ana winds. Water at soil level, not on the leaves."
+          },
+          {
+            "start": "11-01",
+            "end": "11-30",
+            "everyDays": [
+              10,
+              14
+            ],
+            "amount": "Long, slow soak of the whole root zone",
+            "notes": "Skip if it has rained."
           }
         ]
       },
@@ -266,7 +298,7 @@
         ],
         "companions": [],
         "avoidNear": [],
-        "notes": "Cultivar unknown (Kohala is the most common longan in California and the only one in UC's subtropical variety list, harvest listed simply as 'Fall'; Diamond River is the other commonly grown in Southern California). A 4 ft tree may be several years from fruiting: air-layered trees bear about 2-3 years after planting (UC Ventura says 3-5 years), seedlings up to 6 years, and Kohala bears erratically even when mature. Cold: UF/IFAS gives severe damage to young trees at 29-31F and possible death at 26-28F; mature trees are injured at 25-26F (UC: hardened mature trees survive about 22F briefly), so frostTenderBelowF is set at 32F as the protect-by temperature. Pruning: minimal; tip young shoots 1-2 in. once or twice in spring/summer to build branching, and do any size-control pruning right after harvest - UF/IFAS warns that autumn/winter pruning reduces spring bloom, but in Pasadena harvest ends in autumn, so if harvest runs late just remove dead wood and leave shaping until after the next harvest or do it in late spring on a non-bearing tree. Florida-derived numbers (UF/IFAS): all fertilizer rates and frequencies, iron chelate amounts, minor-element spray counts, cold damage temperatures, the autumn nitrogen/water cut-off, fruit size, storage life, and the 'cut 1 ft behind the panicle' rule; Florida harvest is mid-July to early September and does NOT apply here. California-derived: tree size, spacing, water need relative to lemon, 'acidic side' soil preference, late July-December harvest range, Kohala = fall. harvestSeason 09-15 to 11-15 is an estimate for inland Southern California built from UC's 'Fall' for Kohala, UC Ventura's late July-December range, and one south Orange County grower reporting late September in a warm year and later in normal years. Unverified: the exact flowering period in Southern California (sources consulted give none; expected late spring). Unverified: heatStressAboveF of 100F is not a longan-specific figure - sources only say young trees need protection from heat and hot dry wind; 100F follows general Southern California heat-wave guidance. Unverified: watering intervals (no source gives them). Unverified: numeric soil pH range comes from a nursery guide only. Unverified: California-specific insect pests - UC Ventura says longan should be essentially pest-free in California; UC IPM has no longan page that was found. Unverified: the California Rare Fruit Growers longan fruit-facts page could not be opened (site error), so nothing is cited from it.",
+        "notes": "Cultivar unknown (Kohala is the most common longan in California and the only one in UC's subtropical variety list, harvest listed simply as 'Fall'; Diamond River is the other commonly grown in Southern California). A 4 ft tree may be several years from fruiting: air-layered trees bear about 2-3 years after planting (UC Ventura says 3-5 years), seedlings up to 6 years, and Kohala bears erratically even when mature. Cold: UF/IFAS gives severe damage to young trees at 29-31F and possible death at 26-28F; mature trees are injured at 25-26F (UC: hardened mature trees survive about 22F briefly), so frostTenderBelowF is set at 32F as the protect-by temperature. Pruning: minimal; tip young shoots 1-2 in. once or twice in spring/summer to build branching, and do any size-control pruning right after harvest - UF/IFAS warns that autumn/winter pruning reduces spring bloom, but in Pasadena harvest ends in autumn, so if harvest runs late just remove dead wood and leave shaping until after the next harvest or do it in late spring on a non-bearing tree. Florida-derived numbers (UF/IFAS): all fertilizer rates and frequencies, iron chelate amounts, minor-element spray counts, cold damage temperatures, the autumn nitrogen/water cut-off, fruit size, storage life, and the 'cut 1 ft behind the panicle' rule; Florida harvest is mid-July to early September and does NOT apply here. California-derived: tree size, spacing, water need relative to lemon, 'acidic side' soil preference, late July-December harvest range, Kohala = fall. harvestSeason 09-15 to 11-15 is an estimate for inland Southern California built from UC's 'Fall' for Kohala, UC Ventura's late July-December range, and one south Orange County grower reporting late September in a warm year and later in normal years. Unverified: the exact flowering period in Southern California (sources consulted give none; expected late spring). Unverified: heatStressAboveF of 100F is not a longan-specific figure - sources only say young trees need protection from heat and hot dry wind; 100F follows general Southern California heat-wave guidance. Unverified: watering intervals (no source gives them). Unverified: numeric soil pH range comes from a nursery guide only. Unverified: California-specific insect pests - UC Ventura says longan should be essentially pest-free in California; UC IPM has no longan page that was found. Unverified: the California Rare Fruit Growers longan fruit-facts page could not be opened (site error), so nothing is cited from it. Watering schedule: the calendar uses weekly for Mar-May and Oct-Nov, every 3-5 days for Jun-Sep and every 2-3 weeks for Dec-Feb, taken from the 'water' text, whose intervals are starting points and not from a source.",
         "sources": [
           {
             "title": "FC49/MG049: Longan Growing in the Florida Home Landscape (UF/IFAS)",
@@ -299,6 +331,42 @@
           {
             "title": "Caring for your Southern California garden during a heat wave (Greg Alder's Yard Posts)",
             "url": "https://gregalder.com/yardposts/?p=3878"
+          }
+        ],
+        "watering": [
+          {
+            "start": "03-01",
+            "end": "05-31",
+            "everyDays": 7,
+            "amount": "Deep watering of the full root zone",
+            "notes": "Let the top few inches dry first."
+          },
+          {
+            "start": "06-01",
+            "end": "09-30",
+            "everyDays": [
+              3,
+              5
+            ],
+            "amount": "Deep watering of the full root zone",
+            "notes": "More often in 100°F+ spells or Santa Ana winds."
+          },
+          {
+            "start": "10-01",
+            "end": "11-30",
+            "everyDays": 7,
+            "amount": "Deep watering of the full root zone",
+            "notes": "Let the top few inches dry first."
+          },
+          {
+            "start": "12-01",
+            "end": "02-28",
+            "everyDays": [
+              14,
+              21
+            ],
+            "amount": "Deep watering of the full root zone",
+            "notes": "Dry winters only. Skip if it has rained."
           }
         ]
       },
@@ -386,7 +454,7 @@
         ],
         "companions": [],
         "avoidNear": [],
-        "notes": "Variety unknown; this profile assumes Bearss (Persian/Tahiti) lime, Citrus x latifolia, the usual lime in Southern California gardens. Telling them apart: Bearss fruit is about 2 to 2.5 inches, seedless, on a nearly thornless, vigorous spreading tree; Mexican (Key) lime fruit is about 1.5 inches, round, seedy, on a bushy, almost shrub-like tree that is usually quite thorny (thornless selections exist). If it proves to be Mexican lime: it is very sensitive to cold, noticeably more so than Bearss (UC Riverside says Bearss does well wherever lemons do), so protect it at 32°F rather than 30°F; UC Riverside gives the same October to December ripening season for it. Frost: UC Master Gardeners of Sacramento list limes as damaged at 29°F and say to cover young trees and limes at 29°F and switch on heat-giving (non-LED) lights at 32°F; Four Winds Growers says protect Bearss below 30°F; UC Master Gardeners of San Diego say young trees can be injured below 29°F. 30 is used as the threshold. Cover before sunset with cloth on a frame, not plastic touching leaves, water beforehand, uncover on sunny days, and wait until spring to prune frost damage. Pruning: young citrus needs very little; remove suckers below the graft union any time, and do other pruning once a year in late winter just before bloom or just after fruit set. Avoid summer pruning (sunburn) and late-season pruning (frost-tender regrowth). Trunk sunburn: paint the trunk and any exposed limbs with white interior latex paint diluted 1:1 with water, and keep low branches to shade the trunk. Heat: the 95°F threshold comes from UC Master Gardener advice to deep water before several days of 95 to 100°F. Unverified: whether this address lies inside a current CDFA huanglongbing quarantine boundary (HLB quarantine areas exist in Los Angeles County; check CDFA's quarantine maps). Unverified: the tree's age, which sets the nitrogen amount (0.25 lb assumed for year 2, 0.5 lb for year 3). Unverified: exact spring flush dates for the micronutrient spray in Pasadena (03-15 and 04-15 are estimates). Unverified: how many weeks green Bearss fruit holds on the tree; sources say only that it stores well on the tree and drops once fully yellow. Unverified: the clip-rather-than-pull picking method and 'slight give' ripeness tests are common practice, not from a UC page opened for this research. Unverified: a winter watering interval; UC sources give only warm-season figures.",
+        "notes": "Variety unknown; this profile assumes Bearss (Persian/Tahiti) lime, Citrus x latifolia, the usual lime in Southern California gardens. Telling them apart: Bearss fruit is about 2 to 2.5 inches, seedless, on a nearly thornless, vigorous spreading tree; Mexican (Key) lime fruit is about 1.5 inches, round, seedy, on a bushy, almost shrub-like tree that is usually quite thorny (thornless selections exist). If it proves to be Mexican lime: it is very sensitive to cold, noticeably more so than Bearss (UC Riverside says Bearss does well wherever lemons do), so protect it at 32°F rather than 30°F; UC Riverside gives the same October to December ripening season for it. Frost: UC Master Gardeners of Sacramento list limes as damaged at 29°F and say to cover young trees and limes at 29°F and switch on heat-giving (non-LED) lights at 32°F; Four Winds Growers says protect Bearss below 30°F; UC Master Gardeners of San Diego say young trees can be injured below 29°F. 30 is used as the threshold. Cover before sunset with cloth on a frame, not plastic touching leaves, water beforehand, uncover on sunny days, and wait until spring to prune frost damage. Pruning: young citrus needs very little; remove suckers below the graft union any time, and do other pruning once a year in late winter just before bloom or just after fruit set. Avoid summer pruning (sunburn) and late-season pruning (frost-tender regrowth). Trunk sunburn: paint the trunk and any exposed limbs with white interior latex paint diluted 1:1 with water, and keep low branches to shade the trunk. Heat: the 95°F threshold comes from UC Master Gardener advice to deep water before several days of 95 to 100°F. Unverified: whether this address lies inside a current CDFA huanglongbing quarantine boundary (HLB quarantine areas exist in Los Angeles County; check CDFA's quarantine maps). Unverified: the tree's age, which sets the nitrogen amount (0.25 lb assumed for year 2, 0.5 lb for year 3). Unverified: exact spring flush dates for the micronutrient spray in Pasadena (03-15 and 04-15 are estimates). Unverified: how many weeks green Bearss fruit holds on the tree; sources say only that it stores well on the tree and drops once fully yellow. Unverified: the clip-rather-than-pull picking method and 'slight give' ripeness tests are common practice, not from a UC page opened for this research. Unverified: a winter watering interval; UC sources give only warm-season figures. Watering schedule: the calendar uses 7-14 days for Mar-May and Oct-Nov, 7-10 days for Jun-Sep, and nothing from December to February (water only when the soil has dried and it has not rained). The month boundaries are a reading of the 'water' text, which says spring to autumn and midsummer without dates.",
         "sources": [
           {
             "title": "Fertilizing Citrus / Home and Landscape / UC Statewide IPM Program (UC IPM)",
@@ -455,6 +523,38 @@
           {
             "title": "CDFA - Citrus - Huanglongbing (HLB)",
             "url": "https://www.cdfa.ca.gov/Citrus/pests_diseases/hlb/regulation.html"
+          }
+        ],
+        "watering": [
+          {
+            "start": "03-01",
+            "end": "05-31",
+            "everyDays": [
+              7,
+              14
+            ],
+            "amount": "Thorough soak, keeping the trunk dry",
+            "notes": "Skip if it has rained."
+          },
+          {
+            "start": "06-01",
+            "end": "09-30",
+            "everyDays": [
+              7,
+              10
+            ],
+            "amount": "Thorough soak, keeping the trunk dry",
+            "notes": "As often as every 3 to 4 days in 95°F+ heat, when the top 3 to 4 inches are dry."
+          },
+          {
+            "start": "10-01",
+            "end": "11-30",
+            "everyDays": [
+              7,
+              14
+            ],
+            "amount": "Thorough soak, keeping the trunk dry",
+            "notes": "Skip if it has rained."
           }
         ]
       },

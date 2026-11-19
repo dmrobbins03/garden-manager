@@ -21,6 +21,7 @@ python3 scripts/garden.py add research/tomato.json research/basil.json
 python3 scripts/garden.py list
 python3 scripts/garden.py log <id> <seedPrep|sown|germinated|transplanted|firstHarvest|finished> [YYYY-MM-DD] [--round N]
 python3 scripts/garden.py harvest <id> [YYYY-MM-DD] [--amount "1 bunch"] [--note "..."] [--round N]
+python3 scripts/garden.py water <id> [YYYY-MM-DD]      # record a watering; the next one is counted from it
 python3 scripts/garden.py done <event-id> [...]        # tick off a feeding or other task
 python3 scripts/garden.py set <id> plan.sowDate 2027-01-20
 python3 scripts/garden.py set <id> succession.everyDays 21   # resow every 3 weeks; `set <id> succession null` stops it
@@ -44,6 +45,14 @@ See `data/planting-template.json`. Key fields:
 - `profile.sources[]`: `{title, url}` for every page the numbers came from.
 - `profile.succession`: `{everyDays, notes}`, the researched resowing interval for crops that are used up and sown again (cilantro, dill, green onions). `null` for plants sown once.
 - `profile.harvest`: how to pick it. `steps[]` (where and how to cut), `firstCutWhen`, `takeAtMost`, `regrowDays` (number or `[min, max]` until it can be cut again), `maxCuts` (cuts one sowing gives before it is replaced; omit if there is no limit) and `replaceWhen`.
+
+- `profile.watering[]`: seasonal watering rules, each `{start, end, everyDays, amount, notes}` with `MM-DD` dates and `everyDays` as a number or `[min, max]` (the middle is used). Months with no rule get no watering tasks.
+
+## Watering and the calendar
+
+A plant in the ground with `profile.watering` rules gets "Water" tasks. The next one is counted from the last watering logged with `water <id>` (kept in `watered[]`), at the interval of the rule in season; with nothing logged, the first is due today. An unlogged watering stays on today's list until it is logged. Logged waterings from the last 60 days show as done.
+
+The panel's Calendar section shows which days need fertilizer, watering and sowing, by week or month, with a switch for each kind and an "Other tasks" switch for harvests and transplants. Selecting a day lists its tasks in full.
 
 ## Repeat sowing
 
@@ -90,4 +99,4 @@ A scheduled task ("Garden daily tasks") runs each morning on this computer: it r
 
 ## Logging what got done
 
-Tick tasks in the panel, press "Copy update for Claude", and paste it into a chat. Ticks are only stored in the browser until Claude records them with `log` / `harvest` / `done`. A picking that was not on the task list is recorded the same way: say what was picked and how much.
+Tick tasks in the panel, press "Copy update for Claude", and paste it into a chat. Ticks are only stored in the browser until Claude records them with `log` / `harvest` / `water` / `done`. A picking that was not on the task list is recorded the same way: say what was picked and how much.
