@@ -1,0 +1,42 @@
+{
+  "_comment": "TEMPLATE ONLY — placeholder values showing the shape. Every number must come from research for the actual variety and for Pasadena (USDA 10b). Delete _comment before adding.",
+  "name": "Tomato",
+  "variety": "Example Variety",
+  "category": "vegetable",
+  "location": "Bed 1",
+  "quantity": 4,
+  "method": "indoor-start",
+  "plan": { "sowDate": "2027-01-20", "transplantDate": null },
+  "profile": {
+    "summary": "One or two sentences on what this plant needs to do well here.",
+    "seedPrep": { "leadDays": 1, "steps": ["Soak seeds 12 hours in room-temperature water."] },
+    "sowing": "1/4 in deep, 2 seeds per cell, heat mat at 75-80°F.",
+    "germination": { "days": [5, 10], "soilTempF": [70, 85], "notes": "Keep evenly moist; remove dome at first sprouts." },
+    "indoorWeeks": [6, 8],
+    "hardenOffDays": 7,
+    "windows": [
+      { "type": "sow-indoors", "start": "01-15", "end": "03-15" },
+      { "type": "transplant", "start": "03-01", "end": "05-31" },
+      { "type": "direct-sow", "start": "03-15", "end": "05-15" }
+    ],
+    "daysToMaturity": { "days": [60, 70], "from": "transplant" },
+    "harvestWeeks": 12,
+    "harvestNotes": "Pick when fully coloured and slightly soft.",
+    "harvestSeason": null,
+    "fertilizer": [
+      { "label": "At transplant", "product": "Balanced organic 4-4-4", "amount": "2 tbsp per hole", "start": "transplant", "offsetDays": 0 },
+      { "label": "Side-dress", "product": "Low-N tomato feed 3-4-6", "amount": "per label", "start": "transplant", "offsetDays": 21, "everyDays": 21, "until": "harvest-end", "notes": "Stop high-nitrogen feeds once fruit sets." }
+    ],
+    "water": "Deep watering 2-3x/week; daily in heat waves.",
+    "sun": "Full sun, 6-8+ hours.",
+    "spacing": "24 in apart, cage or stake at planting.",
+    "soil": "pH 6.2-6.8; note any alkaline-soil amendments.",
+    "frostTenderBelowF": 40,
+    "heatStressAboveF": 95,
+    "pests": ["Hornworms — hand-pick at dusk."],
+    "companions": ["Basil"],
+    "avoidNear": ["Fennel"],
+    "notes": "",
+    "sources": [{ "title": "Source page title", "url": "https://example.org/" }]
+  }
+}

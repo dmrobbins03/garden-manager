@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Garden Manager</title>
+<style>
+  :root {
+    --paper: #f3efe4; --card: #faf7ef; --ink: #1e2a1c; --soft: #5d6657; --faint: #9aa08f;
+    --line: #d9d3c1; --leaf: #3d6b38; --leaf-soft: #dfe8d2; --clay: #b4502b; --clay-soft: #f3ddd0;
+    --ochre: #c2922a; --ochre-soft: #f1e3bd; --water: #47708a; --water-soft: #d7e3ea;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #161a14; --card: #1d221a; --ink: #e8e6d9; --soft: #a9ae9c; --faint: #6d7364;
+      --line: #32382d; --leaf: #8fbf7f; --leaf-soft: #263322; --clay: #e08a63; --clay-soft: #3a251b;
+      --ochre: #dcb455; --ochre-soft: #3a3118; --water: #86b2cc; --water-soft: #1f2e37;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--sans); }
+  main { max-width: 1180px; margin: 0 auto; padding: 36px 28px 80px; }
+  h1 { font: 600 44px/1.05 var(--serif); letter-spacing: -0.01em; margin: 0; }
+  h2 { font: 600 22px/1.2 var(--serif); margin: 0 0 14px; }
+  h2 small { font: 400 13px var(--sans); color: var(--soft); margin-left: 10px; }
+  .eyebrow { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--soft); }
+  .mono { font-family: var(--mono); font-size: 12.5px; }
+  .soft { color: var(--soft); } .faint { color: var(--faint); }
+  section { margin-top: 44px; }
+  header.mast { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end;
+    padding-bottom: 24px; border-bottom: 2px solid var(--ink); }
+  .mast p { margin: 8px 0 0; color: var(--soft); }
+
+  /* weather */
+  .wx { display: grid; grid-auto-flow: column; gap: 2px; }
+  .wx .day { width: 68px; padding: 8px 6px; text-align: center; background: var(--card); border: 1px solid var(--line); }
+  .wx .day:first-child { border-color: var(--ink); }
+  .wx .dow { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); }
+  .wx .hi { font: 600 19px var(--serif); } .wx .lo { font-size: 12px; color: var(--soft); }
+  .wx .rain { font: 11px var(--mono); color: var(--water); min-height: 16px; }
+  .wx-note { font-size: 12px; color: var(--faint); text-align: right; margin-top: 6px; }
+  .advisories { display: grid; gap: 8px; margin-top: 18px; }
+  .adv { padding: 10px 14px; border-left: 4px solid var(--water); background: var(--water-soft); font-size: 14px; }
+  .adv.frost { border-color: var(--water); } .adv.heat, .adv.wind { border-color: var(--clay); background: var(--clay-soft); }
+  .adv b { font-weight: 600; }
+
+  /* tasks */
+  .cols { display: grid; grid-template-columns: 1.15fr 1fr; gap: 36px; }
+  .task { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .task input { width: 17px; height: 17px; margin: 3px 0 0; accent-color: var(--leaf); }
+  .task .t { font-weight: 550; } .task .d { font-size: 13px; color: var(--soft); }
+  .task.overdue .t { color: var(--clay); }
+  .task.checked .t { text-decoration: line-through; color: var(--faint); }
+  .task .hold { font-size: 12.5px; color: var(--water); }
+  .tag { font: 500 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 2px 7px; border: 1px solid var(--line); color: var(--soft); white-space: nowrap; }
+  .tag.seed-prep, .tag.sow, .tag.germination { background: var(--water-soft); border-color: transparent; color: var(--water); }
+  .tag.transplant, .tag.harden-off, .tag.window-open { background: var(--leaf-soft); border-color: transparent; color: var(--leaf); }
+  .tag.fertilize { background: var(--clay-soft); border-color: transparent; color: var(--clay); }
+  .tag.harvest { background: var(--ochre-soft); border-color: transparent; color: var(--ochre); }
+  .up { display: grid; grid-template-columns: 78px 1fr auto; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .empty { padding: 22px; border: 1px dashed var(--line); color: var(--soft); background: var(--card); }
+  .sync { margin-top: 14px; padding: 12px 14px; background: var(--card); border: 1px solid var(--line); font-size: 13.5px; display: none; }
+  button, .btn { font: 550 13px var(--sans); padding: 8px 14px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); cursor: pointer; text-decoration: none; display: inline-block; }
+  button.ghost, .btn.ghost { background: transparent; color: var(--ink); }
+  button:hover, .btn:hover { opacity: .85; }
+  button:focus-visible, .btn:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
+
+  /* plantings */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); background: var(--card); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--ink); white-space: nowrap; }
+  td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr.row { cursor: pointer; } tr.row:hover td { background: var(--paper); }
+  td .name { font: 600 16px var(--serif); } td .sub { font-size: 12.5px; color: var(--soft); }
+  .stage { font: 500 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 2px 7px; background: var(--leaf-soft); color: var(--leaf); white-space: nowrap; }
+  .stage.unscheduled, .stage.planned { background: transparent; border: 1px solid var(--line); color: var(--soft); }
+  .stage.harvesting { background: var(--ochre-soft); color: var(--ochre); }
+  .stage.finished { background: transparent; color: var(--faint); }
+  .warn { color: var(--clay); font-size: 12.5px; }
+  tr.detail td { background: var(--paper); padding: 18px 22px 22px; }
+  .dgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px 28px; }
+  .dgrid h4 { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); margin: 0 0 4px; }
+  .dgrid p, .dgrid ul { margin: 0; font-size: 13.5px; } .dgrid ul { padding-left: 17px; }
+  a { color: var(--leaf); }
+
+  /* timeline */
+  .tl { border: 1px solid var(--line); background: var(--card); padding: 14px 18px 18px; overflow-x: auto; }
+  .tl-inner { min-width: 760px; }
+  .tl-months { display: grid; grid-template-columns: 170px 1fr; }
+  .tl-months .m { display: grid; grid-template-columns: repeat(12, 1fr); }
+  .tl-months span { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); padding: 0 0 8px 6px; border-left: 1px solid var(--line); }
+  .tl-row { display: grid; grid-template-columns: 170px 1fr; align-items: center; border-top: 1px solid var(--line); }
+  .tl-row .lab { font: 600 14px var(--serif); padding: 10px 10px 10px 0; }
+  .track { position: relative; height: 40px; background: repeating-linear-gradient(90deg, transparent 0, transparent calc(100%/12 - 1px), var(--line) calc(100%/12 - 1px), var(--line) calc(100%/12)); }
+  .bar { position: absolute; top: 15px; height: 14px; }
+  .bar.indoor { background: var(--water); } .bar.grow { background: var(--leaf); } .bar.harvest { background: var(--ochre); }
+  .win { position: absolute; top: 6px; height: 4px; opacity: .55; }
+  .win.sow-indoors, .win.direct-sow { background: var(--water); } .win.transplant { background: var(--leaf); top: 6px; }
+  .win.direct-sow { top: 6px; }
+  .feed { position: absolute; top: 31px; width: 6px; height: 6px; border-radius: 50%; background: var(--clay); margin-left: -3px; }
+  .now { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--clay); margin-left: -1px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 14px; font-size: 12.5px; color: var(--soft); }
+  .legend i { display: inline-block; width: 22px; height: 9px; margin-right: 6px; vertical-align: baseline; }
+
+  /* add */
+  .add { display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; padding: 22px; border: 1px solid var(--ink); background: var(--card); }
+  textarea, input[type=text] { width: 100%; font: 14px/1.5 var(--sans); padding: 10px 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+  textarea { min-height: 130px; resize: vertical; }
+  label { display: block; font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); margin: 0 0 6px; }
+  .actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+  .add ol { margin: 6px 0 0; padding-left: 18px; color: var(--soft); font-size: 13.5px; }
+  footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--faint); }
+
+  @media (max-width: 860px) {
+    main { padding: 24px 16px 60px; } h1 { font-size: 34px; }
+    header.mast, .cols, .add { grid-template-columns: 1fr; }
+    .wx { overflow-x: auto; justify-content: start; } .wx-note { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="mast">
+    <div>
+      <div class="eyebrow" id="today-line"></div>
+      <h1 id="site-name">Garden</h1>
+      <p id="site-line"></p>
+    </div>
+    <div>
+      <div class="wx" id="wx" aria-label="7-day forecast"></div>
+      <div class="wx-note" id="wx-note">Loading forecast…</div>
+    </div>
+  </header>
+  <div class="advisories" id="advisories"></div>
+
+  <section class="cols">
+    <div>
+      <h2>Today <small id="today-count"></small></h2>
+      <div id="tasks"></div>
+      <div class="sync" id="sync">
+        <div><b>Ticked here, not yet saved to the garden log.</b> Checkmarks live in this browser only. Send them to Claude so dates and the schedule update.</div>
+        <div class="actions"><button id="copy-log">Copy update for Claude</button><button class="ghost" id="clear-log">Clear ticks</button><span class="soft" id="copy-log-msg"></span></div>
+      </div>
+    </div>
+    <div>
+      <h2>Coming up <small>next 14 days</small></h2>
+      <div id="upcoming"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Plantings <small id="plant-count"></small></h2>
+    <div id="plantings"></div>
+  </section>
+
+  <section>
+    <h2>Season timeline <small>12 months from this month</small></h2>
+    <div id="timeline"></div>
+  </section>
+
+  <section>
+    <h2>Feeding schedule <small>next 90 days</small></h2>
+    <div id="feeding"></div>
+  </section>
+
+  <section>
+    <h2>Add plants</h2>
+    <div class="add">
+      <div>
+        <label for="add-list">Plants to add — one per line, variety if you know it</label>
+        <textarea id="add-list" placeholder="Tomato, Sungold&#10;Cucumber, Persian&#10;Thai basil"></textarea>
+        <div style="margin-top:12px">
+          <label for="add-where">Where they'll go (optional)</label>
+          <input type="text" id="add-where" placeholder="Bed 2, seeds started indoors">
+        </div>
+        <div class="actions">
+          <button id="add-copy">Copy request</button>
+          <a class="btn ghost" id="add-open" target="_blank" rel="noopener">Open in Claude</a>
+          <span class="soft" id="add-msg"></span>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow">What happens</div>
+        <ol>
+          <li>Claude sends a research agent out for each plant: seed prep, germination, planting windows for Pasadena, days to harvest, feeding.</li>
+          <li>Each plant is written into <span class="mono">data/garden.json</span> with its sources.</li>
+          <li>The schedule is rebuilt. Refresh this page to see it.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <footer id="foot"></footer>
+</main>
+
+<script src="data/garden-data.js"></script>
+<script>
+(function () {
+  var G = window.GARDEN || { site: {}, plantings: [], events: [] };
+  var site = G.site || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var iso = function (d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+  var parse = function (s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); };
+  var addDays = function (d, n) { var x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var fmt = function (s, withYear) { if (!s) return '—'; var d = parse(s); return MON[d.getMonth()] + ' ' + d.getDate() + (withYear || d.getFullYear() !== now.getFullYear() ? " '" + String(d.getFullYear()).slice(2) : ''); };
+  var fmtMD = function (md) { var p = md.split('-'); return MON[+p[0] - 1] + ' ' + (+p[1]); };
+  var now = new Date(); now.setHours(0, 0, 0, 0);
+  var T = iso(now);
+  var ACTIONABLE = { 'seed-prep': 1, sow: 1, 'harden-off': 1, transplant: 1, fertilize: 1 };
+  var TYPE_LABEL = { 'seed-prep': 'Seed prep', sow: 'Sow', germination: 'Germination', 'harden-off': 'Harden off', transplant: 'Transplant', fertilize: 'Feed', harvest: 'Harvest', 'window-open': 'Window' };
+
+  // local ticks
+  var ticks = {};
+  try { ticks = JSON.parse(localStorage.getItem('garden-ticks') || '{}'); } catch (e) {}
+  var saved = {}; G.events.forEach(function (e) { if (e.done) saved[e.id] = 1; });
+  Object.keys(ticks).forEach(function (k) { if (saved[k]) delete ticks[k]; });
+  var storeTicks = function () { try { localStorage.setItem('garden-ticks', JSON.stringify(ticks)); } catch (e) {} };
+
+  // masthead
+  $('today-line').textContent = DOW[now.getDay()] + ' · ' + MON[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+  $('site-name').textContent = site.name || 'Garden';
+  $('site-line').textContent = [site.location, site.usdaZone ? 'USDA zone ' + site.usdaZone : '', site.notes].filter(Boolean).join(' · ');
+  document.title = (site.name || 'Garden') + ' — Garden Manager';
+
+  // tasks
+  function buckets() {
+    var floor = iso(addDays(now, -21)), end = iso(addDays(now, 14));
+    var today = [], overdue = [], upcoming = [];
+    G.events.forEach(function (e) {
+      if (e.done) return;
+      if (e.date === T) today.push(e);
+      else if (e.type === 'germination' && e.end && e.date < T) {
+        if (e.end < T) { if (e.end >= floor) overdue.push(Object.assign({}, e, { title: 'No germination logged for ' + e.plant + ' — check, resow if needed' })); }
+        else today.push(Object.assign({}, e, { title: 'Check for sprouts: ' + e.plant }));
+      }
+      else if (ACTIONABLE[e.type] && e.date >= floor && e.date < T) overdue.push(e);
+      else if (e.date > T && e.date <= end) upcoming.push(e);
+    });
+    return { today: today, overdue: overdue, upcoming: upcoming };
+  }
+  var wxHold = null; // set by weather
+  function renderTasks() {
+    var b = buckets(), all = b.overdue.map(function (e) { return [e, true]; }).concat(b.today.map(function (e) { return [e, false]; }));
+    $('today-count').textContent = all.length ? all.length + (all.length === 1 ? ' task' : ' tasks') + (b.overdue.length ? ', ' + b.overdue.length + ' overdue' : '') : '';
+    $('tasks').innerHTML = all.length ? all.map(function (x) {
+      var e = x[0], od = x[1], ck = !!ticks[e.id];
+      var hold = (wxHold && e.type === 'fertilize') ? '<div class="hold">' + esc(wxHold) + '</div>' : '';
+      return '<label class="task' + (od ? ' overdue' : '') + (ck ? ' checked' : '') + '" style="text-transform:none;letter-spacing:0;font:inherit;color:inherit;margin:0">' +
+        '<input type="checkbox" data-id="' + esc(e.id) + '"' + (ck ? ' checked' : '') + '>' +
+        '<span><span class="t">' + esc(e.title) + '</span>' +
+        '<div class="d">' + esc([e.location, od ? 'was due ' + fmt(e.date) : '', e.detail].filter(Boolean).join(' · ')) + '</div>' + hold + '</span>' +
+        '<span class="tag ' + esc(e.type) + '">' + esc(TYPE_LABEL[e.type] || e.type) + '</span></label>';
+    }).join('') : '<div class="empty">' + (G.plantings.length ? 'Nothing needs doing in the garden today.' : 'No plants yet. Add some below and their tasks will show up here.') + '</div>';
+    $('upcoming').innerHTML = b.upcoming.length ? b.upcoming.map(function (e) {
+      return '<div class="up"><span class="mono soft">' + DOW[parse(e.date).getDay()] + ' ' + fmt(e.date) + '</span><span>' + esc(e.title) + '</span><span class="tag ' + esc(e.type) + '">' + esc(TYPE_LABEL[e.type] || e.type) + '</span></div>';
+    }).join('') : '<div class="empty">Nothing scheduled in the next two weeks.</div>';
+    $('sync').style.display = Object.keys(ticks).length ? 'block' : 'none';
+  }
+  $('tasks').addEventListener('change', function (ev) {
+    var id = ev.target.getAttribute('data-id'); if (!id) return;
+    if (ev.target.checked) ticks[id] = T; else delete ticks[id];
+    storeTicks(); renderTasks();
+  });
+  function copy(text, msgEl) {
+    var ok = function () { msgEl.textContent = 'Copied.'; setTimeout(function () { msgEl.textContent = ''; }, 2500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback); else fallback();
+    function fallback() { var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); ok(); } catch (e) { msgEl.textContent = 'Copy failed — select manually.'; } ta.remove(); }
+  }
+  $('copy-log').onclick = function () {
+    var byId = {}; G.events.forEach(function (e) { byId[e.id] = e; });
+    var lines = Object.keys(ticks).map(function (id) {
+      var e = byId[id]; if (!e) return null;
+      var cmd = e.milestone ? 'log ' + e.plantingId + ' ' + e.milestone + ' ' + ticks[id] : 'done ' + id;
+      return '- ' + e.title + ' (done ' + ticks[id] + ') → python3 scripts/garden.py ' + cmd;
+    }).filter(Boolean);
+    copy('Update my garden manager (garden-manager folder). I finished these — record them and rebuild:\n' + lines.join('\n'), $('copy-log-msg'));
+  };
+  $('clear-log').onclick = function () { ticks = {}; storeTicks(); renderTasks(); };
+
+  // plantings
+  function winText(p) {
+    var ws = (p.profile && p.profile.windows) || [];
+    return ws.map(function (w) { return '<div><span class="faint">' + esc(w.type.replace('-', ' ')) + '</span> ' + fmtMD(w.start) + '–' + fmtMD(w.end) + '</div>'; }).join('') || '—';
+  }
+  function list(arr) { return arr && arr.length ? '<ul>' + arr.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; }
+  function block(h, body) { return body ? '<div><h4>' + h + '</h4>' + body + '</div>' : ''; }
+  function detail(p) {
+    var f = p.profile || {}, g = f.germination || {};
+    var rng = function (x, u) { return x == null ? '' : (Array.isArray(x) ? x[0] + '–' + x[1] : x) + u; };
+    var feeds = (f.fertilizer || []).map(function (r) {
+      var when = r.start === 'calendar' ? (r.dates || []).map(fmtMD).join(', ') : (r.offsetDays ? r.offsetDays + ' days after ' : 'at ') + (r.start || 'transplant') + (r.everyDays ? ', then every ' + r.everyDays + ' days' : '');
+      return '<li><b>' + esc(r.label || 'Feed') + '</b> — ' + esc([r.product, r.amount].filter(Boolean).join(', ')) + ' <span class="soft">(' + esc(when) + ')</span>' + (r.notes ? '<br><span class="soft">' + esc(r.notes) + '</span>' : '') + '</li>';
+    }).join('');
+    var src = (f.sources || []).map(function (s) { var ok = /^https?:\/\//.test(s.url || ''); return '<li>' + (ok ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title || s.url) + '</a>' : esc(s.title || '')) + '</li>'; }).join('');
+    return '<div class="dgrid">' +
+      block('Summary', f.summary ? '<p>' + esc(f.summary) + '</p>' : '') +
+      block('Seed prep', f.seedPrep && f.seedPrep.steps ? list(f.seedPrep.steps) : '') +
+      block('Sowing', f.sowing ? '<p>' + esc(f.sowing) + '</p>' : '') +
+      block('Germination', g.days ? '<p>' + esc(rng(g.days, ' days') + (g.soilTempF ? ' at ' + rng(g.soilTempF, '°F') + ' soil' : '')) + (g.notes ? '<br><span class="soft">' + esc(g.notes) + '</span>' : '') + '</p>' : '') +
+      block('Maturity', f.daysToMaturity ? '<p>' + esc(rng(f.daysToMaturity.days, ' days from ' + (f.daysToMaturity.from || 'sow'))) + (f.harvestNotes ? '<br><span class="soft">' + esc(f.harvestNotes) + '</span>' : '') + '</p>' : '') +
+      block('Feeding', feeds ? '<ul>' + feeds + '</ul>' : '') +
+      block('Water', f.water ? '<p>' + esc(f.water) + '</p>' : '') +
+      block('Sun &amp; spacing', (f.sun || f.spacing) ? '<p>' + esc([f.sun, f.spacing].filter(Boolean).join(' ')) + '</p>' : '') +
+      block('Soil', f.soil ? '<p>' + esc(f.soil) + '</p>' : '') +
+      block('Weather limits', (f.frostTenderBelowF != null || f.heatStressAboveF != null) ? '<p>' + esc([f.frostTenderBelowF != null ? 'Protect below ' + f.frostTenderBelowF + '°F.' : '', f.heatStressAboveF != null ? 'Heat stress above ' + f.heatStressAboveF + '°F.' : ''].join(' ')) + '</p>' : '') +
+      block('Pests', list(f.pests)) +
+      block('Companions', (f.companions || f.avoidNear) ? '<p>' + esc((f.companions && f.companions.length ? 'Good with ' + f.companions.join(', ') + '. ' : '') + (f.avoidNear && f.avoidNear.length ? 'Keep away from ' + f.avoidNear.join(', ') + '.' : '')) + '</p>' : '') +
+      block('Notes', (f.notes || p.notes) ? '<p>' + esc([f.notes, p.notes].filter(Boolean).join(' ')) + '</p>' : '') +
+      block('Sources', src ? '<ul>' + src + '</ul>' : '') +
+      '</div><p class="mono faint" style="margin:14px 0 0">id: ' + esc(p.id) + '</p>';
+  }
+  function renderPlantings() {
+    var ps = G.plantings;
+    $('plant-count').textContent = ps.length ? ps.length + (ps.length === 1 ? ' planting' : ' plantings') : '';
+    if (!ps.length) { $('plantings').innerHTML = '<div class="empty">Your garden is empty. Each plant you add gets a row here with its seed prep, germination time, planting window, harvest estimate and next feeding.</div>'; return; }
+    $('plantings').innerHTML = '<div class="tablewrap"><table><thead><tr><th>Plant</th><th>Stage</th><th>Seed prep</th><th>Sow</th><th>Germination</th><th>Planting window</th><th>Transplant</th><th>Harvest (est.)</th><th>Next feed</th></tr></thead><tbody>' +
+      ps.map(function (p, i) {
+        var c = p.computed || {}, a = p.actual || {};
+        var mark = function (k) { return a[k] ? ' ✓' : ''; };
+        var germ = c.germination ? (c.germination[0] === c.germination[1] ? fmt(c.germination[0]) + ' ✓' : fmt(c.germination[0]) + '–' + fmt(c.germination[1])) : '—';
+        var harv = c.harvestStart ? fmt(c.harvestStart) + (c.harvestEnd ? ' – ' + fmt(c.harvestEnd) : '') : '—';
+        return '<tr class="row" data-i="' + i + '" tabindex="0" aria-expanded="false"><td><div class="name">' + esc(p.name) + '</div><div class="sub">' + esc([p.variety, p.location, p.quantity ? '×' + p.quantity : ''].filter(Boolean).join(' · ')) + '</div>' +
+          (c.warnings || []).map(function (w) { return '<div class="warn">⚠ ' + esc(w) + '</div>'; }).join('') + '</td>' +
+          '<td><span class="stage ' + esc(c.stage) + '">' + esc(c.stage || '') + '</span></td>' +
+          '<td class="mono">' + fmt(c.seedPrep) + (c.seedPrep ? mark('seedPrep') : '') + '</td><td class="mono">' + fmt(c.sow) + (c.sow ? mark('sown') : '') + '</td><td class="mono">' + germ + '</td>' +
+          '<td class="mono">' + winText(p) + '</td><td class="mono">' + fmt(c.transplant) + (c.transplant ? mark('transplanted') : '') + '</td><td class="mono">' + harv + '</td><td class="mono">' + fmt(c.nextFeed) + '</td></tr>' +
+          '<tr class="detail" hidden><td colspan="9">' + detail(p) + '</td></tr>';
+      }).join('') + '</tbody></table></div><p class="soft" style="font-size:12.5px;margin:8px 0 0">Click a row for its full care sheet. ✓ marks dates you have logged; the rest are projections.</p>';
+  }
+  function toggle(tr) { var d = tr.nextElementSibling; d.hidden = !d.hidden; tr.setAttribute('aria-expanded', String(!d.hidden)); }
+  $('plantings').addEventListener('click', function (ev) { if (ev.target.closest('a')) return; var tr = ev.target.closest('tr.row'); if (tr) toggle(tr); });
+  $('plantings').addEventListener('keydown', function (ev) { if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('tr.row')) { ev.preventDefault(); toggle(ev.target); } });
+
+  // timeline
+  function renderTimeline() {
+    var ps = G.plantings.filter(function (p) { return (p.computed || {}).stage !== 'finished'; });
+    if (!ps.length) { $('timeline').innerHTML = '<div class="empty">The year at a glance appears here: planting windows, indoor starts, time in the ground, harvest and feedings for every plant.</div>'; return; }
+    var start = new Date(now.getFullYear(), now.getMonth(), 1), end = new Date(now.getFullYear() + 1, now.getMonth(), 1), span = end - start;
+    var pct = function (d) { return Math.max(0, Math.min(100, (d - start) / span * 100)); };
+    var seg = function (cls, a, b, title) { if (!a || !b) return ''; var x = pct(parse(a)), y = pct(parse(b)); if (y <= x) return ''; return '<div class="' + cls + '" style="left:' + x + '%;width:' + (y - x) + '%" title="' + esc(title) + '"></div>'; };
+    var months = ''; for (var i = 0; i < 12; i++) months += '<span>' + MON[(now.getMonth() + i) % 12] + '</span>';
+    var feedsBy = {}; G.events.forEach(function (e) { if (e.type === 'fertilize') (feedsBy[e.plantingId] = feedsBy[e.plantingId] || []).push(e); });
+    var rows = ps.map(function (p) {
+      var c = p.computed, h = '';
+      ((p.profile || {}).windows || []).forEach(function (w) {
+        [start.getFullYear() - 1, start.getFullYear(), start.getFullYear() + 1].forEach(function (y) {
+          var s = y + '-' + w.start, e = (w.end < w.start ? y + 1 : y) + '-' + w.end;
+          if (parse(e) < start || parse(s) > end) return;
+          h += seg('win ' + w.type, s, e, w.type.replace('-', ' ') + ' window ' + fmtMD(w.start) + '–' + fmtMD(w.end));
+        });
+      });
+      var inGround = c.transplant || c.sow;
+      if (p.method === 'indoor-start') h += seg('bar indoor', c.sow, c.transplant, 'Indoors ' + fmt(c.sow) + ' → ' + fmt(c.transplant));
+      h += seg('bar grow', inGround, c.harvestStart, 'Growing ' + fmt(inGround) + ' → ' + fmt(c.harvestStart));
+      h += seg('bar harvest', c.harvestStart, c.harvestEnd, 'Harvest ' + fmt(c.harvestStart) + ' → ' + fmt(c.harvestEnd));
+      (feedsBy[p.id] || []).forEach(function (e) { var d = parse(e.date); if (d >= start && d <= end) h += '<div class="feed" style="left:' + pct(d) + '%" title="' + esc(e.title + ' — ' + fmt(e.date)) + '"></div>'; });
+      h += '<div class="now" style="left:' + pct(now) + '%"></div>';
+      return '<div class="tl-row"><div class="lab">' + esc(p.name) + (p.variety ? ' <span class="soft" style="font:400 12px var(--sans)">' + esc(p.variety) + '</span>' : '') + '</div><div class="track">' + h + '</div></div>';
+    }).join('');
+    $('timeline').innerHTML = '<div class="tl"><div class="tl-inner"><div class="tl-months"><div></div><div class="m">' + months + '</div></div>' + rows + '</div>' +
+      '<div class="legend"><span><i style="background:var(--water);height:4px;opacity:.55"></i>Sowing window</span><span><i style="background:var(--leaf);height:4px;opacity:.55"></i>Transplant window</span><span><i style="background:var(--water)"></i>Started indoors</span><span><i style="background:var(--leaf)"></i>In the ground</span><span><i style="background:var(--ochre)"></i>Harvest</span><span><i style="background:var(--clay);width:7px;height:7px;border-radius:50%"></i>Feeding</span><span><i style="background:var(--clay);width:2px;height:12px"></i>Today</span></div></div>';
+  }
+
+  // feeding
+  function renderFeeding() {
+    var end = iso(addDays(now, 90));
+    var fs = G.events.filter(function (e) { return e.type === 'fertilize' && !e.done && e.date >= T && e.date <= end; });
+    $('feeding').innerHTML = fs.length ? '<div class="tablewrap"><table><thead><tr><th>Date</th><th>Plant</th><th>Feeding</th><th>Product &amp; amount</th></tr></thead><tbody>' + fs.map(function (e) {
+      return '<tr><td class="mono">' + DOW[parse(e.date).getDay()] + ' ' + fmt(e.date) + '</td><td>' + esc(e.plant) + (e.location ? ' <span class="soft">· ' + esc(e.location) + '</span>' : '') + '</td><td>' + esc(e.title.split(': ').slice(1).join(': ')) + '</td><td class="soft">' + esc(e.detail) + '</td></tr>';
+    }).join('') + '</tbody></table></div>' : '<div class="empty">' + (G.plantings.length ? 'No feedings due in the next 90 days.' : 'Feedings for each plant will be listed here by date.') + '</div>';
+  }
+
+  // add plants
+  function addPrompt() {
+    var lines = $('add-list').value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+    if (!lines.length) return null;
+    var where = $('add-where').value.trim();
+    return 'Use the add-garden-plants skill to add these to my garden manager (garden-manager folder). Research each one with its own agent, then add it and rebuild:\n' + lines.map(function (l) { return '- ' + l; }).join('\n') + (where ? '\nWhere / how: ' + where : '');
+  }
+  function syncOpen() { var p = addPrompt(); $('add-open').href = p ? 'https://claude.ai/new?q=' + encodeURIComponent(p) : 'https://claude.ai/new'; }
+  $('add-list').addEventListener('input', syncOpen); $('add-where').addEventListener('input', syncOpen); syncOpen();
+  $('add-copy').onclick = function () { var p = addPrompt(); if (!p) { $('add-msg').textContent = 'List at least one plant first.'; return; } copy(p, $('add-msg')); };
+
+  // weather
+  function renderWeather(w) {
+    var d = w.daily, days = d.time.map(function (t, i) { return { date: t, hi: d.temperature_2m_max[i], lo: d.temperature_2m_min[i], rain: d.precipitation_sum[i] || 0, pop: d.precipitation_probability_max ? d.precipitation_probability_max[i] : null, gust: d.wind_gusts_10m_max ? d.wind_gusts_10m_max[i] : 0 }; });
+    $('wx').innerHTML = days.map(function (x, i) {
+      return '<div class="day"><div class="dow">' + (i === 0 ? 'Today' : DOW[parse(x.date).getDay()]) + '</div><div class="hi">' + Math.round(x.hi) + '°</div><div class="lo">' + Math.round(x.lo) + '°</div><div class="rain">' + (x.rain >= 0.01 ? x.rain.toFixed(2) + '″' : (x.pop >= 30 ? x.pop + '%' : '')) + '</div></div>';
+    }).join('');
+    $('wx-note').textContent = (site.location || '') + ' · Open-Meteo forecast';
+    var adv = [], active = G.plantings.filter(function (p) { var s = (p.computed || {}).stage; return s && s !== 'finished' && s !== 'planned' && s !== 'unscheduled'; });
+    var names = function (ps) { return ps.map(function (p) { return p.name; }).filter(function (v, i, a) { return a.indexOf(v) === i; }).join(', '); };
+    var dayName = function (x, i) { return i === 0 ? 'today' : i === 1 ? 'tomorrow' : DOW[parse(x.date).getDay()]; };
+    var rain48 = days.slice(0, 3).reduce(function (s, x) { return s + x.rain; }, 0);
+    if (rain48 >= 0.25) { wxHold = 'Rain coming (' + rain48.toFixed(2) + '″ by ' + dayName(days[2], 2) + ') — wait and feed after it passes.'; adv.push(['rain', '<b>Rain: ' + rain48.toFixed(2) + '″ through ' + dayName(days[2], 2) + '.</b> Skip irrigation and hold fertiliser until it passes so it is not washed out.']); }
+    days.slice(0, 4).forEach(function (x, i) {
+      var cold = active.filter(function (p) { var t = (p.profile || {}).frostTenderBelowF; return t != null && x.lo <= t; });
+      if (cold.length) adv.push(['frost', '<b>Low of ' + Math.round(x.lo) + '°F ' + dayName(x, i) + '.</b> Cover or bring in: ' + esc(names(cold)) + '.']);
+      else if (x.lo <= 34) adv.push(['frost', '<b>Frost risk ' + dayName(x, i) + ' (' + Math.round(x.lo) + '°F).</b> Cover tender plants overnight.']);
+      var hot = active.filter(function (p) { var t = (p.profile || {}).heatStressAboveF; return t != null && x.hi >= t; });
+      if (hot.length) adv.push(['heat', '<b>High of ' + Math.round(x.hi) + '°F ' + dayName(x, i) + '.</b> Water deeply early and shade: ' + esc(names(hot)) + '. Move any sowing or transplanting to the evening.']);
+      else if (x.hi >= 100) adv.push(['heat', '<b>' + Math.round(x.hi) + '°F ' + dayName(x, i) + '.</b> Water early; hold off transplanting and feeding.']);
+      if (x.gust >= 35) adv.push(['wind', '<b>Gusts to ' + Math.round(x.gust) + ' mph ' + dayName(x, i) + '.</b> Check stakes and covers; avoid spraying.']);
+    });
+    $('advisories').innerHTML = adv.map(function (a) { return '<div class="adv ' + a[0] + '">' + a[1] + '</div>'; }).join('');
+    renderTasks();
+  }
+  function loadWeather() {
+    if (site.latitude == null) { $('wx-note').textContent = 'Set site latitude/longitude in data/garden.json for weather.'; return; }
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + site.latitude + '&longitude=' + site.longitude +
+      '&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_gusts_10m_max&temperature_unit=fahrenheit&precipitation_unit=inch&wind_speed_unit=mph&forecast_days=7&timezone=' + encodeURIComponent(site.timezone || 'auto');
+    fetch(url).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(renderWeather).catch(function () { $('wx-note').textContent = 'Forecast unavailable (offline?). Tasks are shown without weather adjustments.'; });
+  }
+
+  renderTasks(); renderPlantings(); renderTimeline(); renderFeeding(); loadWeather();
+  $('foot').textContent = window.GARDEN ? 'Schedule built ' + (G.generatedAt || '').replace('T', ' ') + ' from data/garden.json. Refresh after Claude updates it.' : 'data/garden-data.js not found — run: python3 scripts/garden.py build';
+})();
+</script>
+</body>
+</html>
