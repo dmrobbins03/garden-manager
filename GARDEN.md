@@ -64,6 +64,17 @@ A planting with `succession: {"everyDays": N}` is sown again and again instead o
 - With `profile.harvest.maxCuts`, a sowing that has given that many cuts gets a "pull it" task; ticking it logs `finished` for that sowing.
 - The care sheet shows the harvesting steps and the harvest log; the Harvest column shows the count, the last picking and when it is ready again.
 
+## Hosted page
+
+`hosted/` is the same panel as a private Claude artifact page ("Garden Manager"), so it works from a phone and needs no copy and paste.
+
+- The garden data lives in the page's database: `garden/site`, one `plantings/<id>` document per planting, `requests/<id>` for plants waiting to be researched, `garden/weather` and `agent/status`. Once the page has been opened, its database is the source of truth, not `data/garden.json` in this folder.
+- `hosted/scheduler.js` is the JavaScript twin of `scripts/garden.py`: the page works out the schedule itself, so ticking a task or logging a picking shows up at once. `python3 tests/parity.py` checks that the two give the same schedule and the same data changes. Change them together.
+- `hosted/index.html` is generated from `index.html` by `python3 hosted/make_hosted.py`; edit the generator, not the output.
+- "Tell the garden" sends typed requests to Claude inside the page. It can log sowings and pickings, tick tasks, change dates and intervals, and queue new plants. It cannot browse the web, so new plants are researched by the background agent in `hosted/AGENT.md`.
+- `hosted/import.json` is copied into the database the first time the page is opened and never again.
+- `node hosted/cli.js tasks GARDEN.json` gives the task list from an export of the page's data.
+
 ## Weather rules
 
 The panel pulls a 7-day Open-Meteo forecast for the site coordinates. The daily brief applies the same rules:
