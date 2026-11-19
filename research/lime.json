@@ -1,0 +1,152 @@
+{
+  "name": "Lime",
+  "variety": null,
+  "category": "fruit tree",
+  "location": "Back yard (in ground)",
+  "quantity": 1,
+  "method": "established",
+  "plan": {},
+  "profile": {
+    "summary": "A young in-ground lime in Pasadena most needs deep, regular summer irrigation (more often in 95°F+ heat and Santa Ana winds), a whitewashed trunk, and modest nitrogen split across February, May and June, with a chelated micronutrient spray on the spring flush if alkaline soil yellows the new leaves. Limes are among the least cold-hardy citrus, so cover it on the rare nights forecast near 30°F, and check new flush monthly for Asian citrus psyllid because Los Angeles County has huanglongbing.",
+    "seedPrep": null,
+    "sowing": "",
+    "germination": null,
+    "indoorWeeks": null,
+    "hardenOffDays": null,
+    "windows": [],
+    "daysToMaturity": null,
+    "harvestWeeks": null,
+    "harvestNotes": "Bearss limes are full size at about 2 to 2.5 inches across with a thin, smooth rind. They are normally picked green; if left, the rind turns light yellow at full maturity (usually late autumn to early winter) and the fruit then drops, so a yellow lime is fully ripe, not spoiled. Citrus does not improve after picking, so judge by cutting one open: it should be juicy and sharply acidic. UC Riverside lists the season of ripeness at Riverside as October to December, while UC Master Gardeners of San Diego list Bearss harvest as August through March; the tree is somewhat everbearing, so a few fruit can be found outside the main season. Picked fruit keeps about 4 to 6 weeks refrigerated and the juice can be frozen for up to 4 months.",
+    "harvestSeason": {
+      "start": "08-01",
+      "end": "03-31"
+    },
+    "harvest": {
+      "steps": [
+        "Pick full-size green fruit (about 2 to 2.5 inches across) as needed; cut one open first to confirm it is juicy.",
+        "Clip the fruit off with hand pruners, leaving the small button on the fruit, rather than pulling, so the rind does not tear and twigs do not break.",
+        "Pick everything that has turned yellow promptly, because fully mature Bearss limes drop from the tree.",
+        "If frost is forecast, pick ripe fruit beforehand; fruit is damaged below about 30°F.",
+        "Because Los Angeles County has huanglongbing quarantine areas, only share fruit that is washed and free of stems and leaves, and do not take cuttings, leaves or budwood off the property."
+      ],
+      "firstCutWhen": "Fruit is full size (about 2 to 2.5 inches across), smooth-skinned and juicy when cut, still green or just starting to lighten.",
+      "takeAtMost": "All fruit that is full size; green fruit can be left on the tree and picked as needed, but pick before or as soon as it turns yellow because fully mature fruit drops.",
+      "regrowDays": null,
+      "maxCuts": null,
+      "replaceWhen": ""
+    },
+    "succession": null,
+    "fertilizer": [
+      {
+        "label": "Nitrogen",
+        "product": "Nitrogen fertilizer such as ammonium sulfate (21-0-0) or a citrus food",
+        "amount": "Annual total 0.25 lb actual nitrogen in the tree's 2nd year in the ground, 0.5 lb in the 3rd year (about 1.25 to 2.5 lb ammonium sulfate per year), split into three equal feedings: roughly 0.4 lb ammonium sulfate per feeding in year 2, 0.8 lb per feeding in year 3.",
+        "start": "calendar",
+        "dates": [
+          "02-01",
+          "05-01",
+          "06-01"
+        ],
+        "notes": "UC IPM schedule: divide the yearly nitrogen into 2 or 3 applications, the first in January or February just before bloom, the second in May, and possibly a third in June. Rises to 0.75 lb nitrogen in year 4 and 1 lb per year from year 5. Spread evenly under and just beyond the canopy, not piled at the trunk, and water in. No nitrogen in late summer, autumn or winter: late feeding roughens rind and delays colour, pushes frost-tender growth, and summer/fall flush is what citrus leafminer attacks. UC Master Gardeners of San Diego instead give four feedings 4 to 6 weeks apart starting in February (0.5 cup ammonium sulfate each in year 2, 1 cup each in year 3). Tree age is unknown; a 4 ft tree is assumed to be in its 2nd or 3rd year."
+      },
+      {
+        "label": "Micronutrient foliar spray",
+        "product": "Liquid chelated micronutrient spray containing zinc and iron (many citrus blends also include manganese)",
+        "amount": "Mix at label rate and wet the new leaves thoroughly.",
+        "start": "calendar",
+        "dates": [
+          "03-15",
+          "04-15"
+        ],
+        "notes": "Only if needed: use when new leaves show yellowing between green veins (zinc, iron or manganese deficiency, common where soil is above pH 7). UC IPM says to apply as new growth emerges in spring; UC Cooperative Extension Ventura notes two or more sprays may be needed in the first year, hence the optional second date. Soil alternative: zinc sulfate or iron sulfate. Skip if foliage is evenly green. The exact dates are an estimate of spring flush timing in Pasadena; spray when the flush is actually expanding. Blotchy, lopsided yellowing is not a nutrient problem; see the huanglongbing pest entry."
+      }
+    ],
+    "water": "Water deeply and infrequently, keeping the trunk dry. Spring to autumn: a thorough soak every 7 to 14 days for an established young tree, about every 7 to 10 days in midsummer; citrus uses roughly 4 to 6 inches of water a month in the warm season. Heat spikes: deep water at least a day before several days of 95 to 100°F are forecast, then check the top 3 to 4 inches of soil and water when dry, as often as every 3 to 4 days. Aim to wet the soil to about 3 feet as the tree matures, and move emitters outward as roots spread. Winter: water only when the soil a few inches down has dried and rain has not done the job. Overwatering causes root and crown rot; underwatering causes small fruit, leaf drop and sunburn. Mulch helps, kept back from the trunk.",
+    "sun": "Full sun for most of the day (at least 8 hours), in a spot sheltered from strong wind.",
+    "spacing": "Bearss is a vigorous, spreading, medium-large tree, about 10 to 15 ft tall in the ground. Keep lawn and frequently watered plants away; a turf-free area of about 6 ft around the trunk is recommended.",
+    "soil": "Well-drained soil; ideal pH about 6.0 to just under 7.0. Above pH 7.5 (typical of Pasadena soil and tap water) iron, zinc and manganese become less available and new leaves yellow between green veins. Respond with a chelated zinc/iron foliar spray on the spring flush or soil-applied zinc sulfate or iron sulfate, use an acidifying nitrogen source such as ammonium sulfate, and avoid waterlogging, which also causes iron deficiency.",
+    "frostTenderBelowF": 30,
+    "heatStressAboveF": 95,
+    "pests": [
+      "Asian citrus psyllid and huanglongbing (HLB, citrus greening): the psyllid spreads an incurable bacterial disease first found in California in a Los Angeles County home garden in 2012. Inspect new flush monthly from spring through fall with a hand lens for yellow-orange nymphs trailing curly white waxy tubules, tiny yellow eggs in leaf folds, and brown-mottled adults feeding head-down at about a 45-degree angle. HLB shows as blotchy yellowing that is uneven across the leaf midrib or confined to one limb (nutrient deficiency is symmetrical), plus small, lopsided, bitter fruit. Report suspected psyllids or HLB to the CDFA Exotic Pest Hotline, 1-800-491-1899, or the Los Angeles County agricultural commissioner. Do not move citrus plants, cuttings, leaves or budwood off the property; fruit may be shared only washed and free of stems and leaves. Buy any new citrus from a reputable local nursery and cooperate with CDFA inspection, treatment or removal.",
+      "Ants (especially Argentine ants): they farm honeydew from psyllids and protect them from the parasitic wasp Tamarixia radiata and other natural enemies. Keep ants from climbing the trunk and keep branches from touching fences or other plants.",
+      "Citrus leafminer: silvery, winding mines and curled new leaves on summer and fall flush. Young trees are the most affected but are unlikely to die. Leave mined leaves on, do not feed nitrogen in summer or fall, prune live wood no more than once a year, and remove vigorous water sprouts. Spraying is rarely worthwhile; spinosad on new flush is the option for a very young tree.",
+      "Root and crown rot: caused by overwatering, a wet trunk, or soil piled against the trunk. Water deeply but infrequently, keep the trunk dry and the base weed-free.",
+      "Sunburn and heat injury: trunk and exposed limbs of young trees burn in hot, dry weather, worse in dry soil; Santa Ana conditions can also cause leaf and fruit drop. Whitewash the trunk and water ahead of heat.",
+      "Wood pocket: a genetic disorder that UC Riverside says is carried by all known Persian (Bearss) lime trees and can seriously harm the tree; there is no treatment."
+    ],
+    "companions": [],
+    "avoidNear": [],
+    "notes": "Variety unknown; this profile assumes Bearss (Persian/Tahiti) lime, Citrus x latifolia, the usual lime in Southern California gardens. Telling them apart: Bearss fruit is about 2 to 2.5 inches, seedless, on a nearly thornless, vigorous spreading tree; Mexican (Key) lime fruit is about 1.5 inches, round, seedy, on a bushy, almost shrub-like tree that is usually quite thorny (thornless selections exist). If it proves to be Mexican lime: it is very sensitive to cold, noticeably more so than Bearss (UC Riverside says Bearss does well wherever lemons do), so protect it at 32°F rather than 30°F; UC Riverside gives the same October to December ripening season for it. Frost: UC Master Gardeners of Sacramento list limes as damaged at 29°F and say to cover young trees and limes at 29°F and switch on heat-giving (non-LED) lights at 32°F; Four Winds Growers says protect Bearss below 30°F; UC Master Gardeners of San Diego say young trees can be injured below 29°F. 30 is used as the threshold. Cover before sunset with cloth on a frame, not plastic touching leaves, water beforehand, uncover on sunny days, and wait until spring to prune frost damage. Pruning: young citrus needs very little; remove suckers below the graft union any time, and do other pruning once a year in late winter just before bloom or just after fruit set. Avoid summer pruning (sunburn) and late-season pruning (frost-tender regrowth). Trunk sunburn: paint the trunk and any exposed limbs with white interior latex paint diluted 1:1 with water, and keep low branches to shade the trunk. Heat: the 95°F threshold comes from UC Master Gardener advice to deep water before several days of 95 to 100°F. Unverified: whether this address lies inside a current CDFA huanglongbing quarantine boundary (HLB quarantine areas exist in Los Angeles County; check CDFA's quarantine maps). Unverified: the tree's age, which sets the nitrogen amount (0.25 lb assumed for year 2, 0.5 lb for year 3). Unverified: exact spring flush dates for the micronutrient spray in Pasadena (03-15 and 04-15 are estimates). Unverified: how many weeks green Bearss fruit holds on the tree; sources say only that it stores well on the tree and drops once fully yellow. Unverified: the clip-rather-than-pull picking method and 'slight give' ripeness tests are common practice, not from a UC page opened for this research. Unverified: a winter watering interval; UC sources give only warm-season figures.",
+    "sources": [
+      {
+        "title": "Fertilizing Citrus / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+        "url": "https://ipm.ucanr.edu/home-and-landscape/fertilizing-citrus/"
+      },
+      {
+        "title": "Cultural Tips for Growing Citrus / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+        "url": "https://ipm.ucanr.edu/home-and-landscape/cultural-tips-for-growing-citrus/"
+      },
+      {
+        "title": "Asian Citrus Psyllid and Huanglongbing Disease / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+        "url": "https://ipm.ucanr.edu/home-and-landscape/asian-citrus-psyllid-and-huanglongbing-disease/"
+      },
+      {
+        "title": "Pest Notes: Asian Citrus Psyllid and Huanglongbing Disease (UC ANR, PDF)",
+        "url": "https://ipm.ucanr.edu/legacy_assets/PDF/PESTNOTES/pnasiancitruspsyllid.pdf"
+      },
+      {
+        "title": "Citrus Leafminer / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+        "url": "https://ipm.ucanr.edu/home-and-landscape/citrus-leafminer/"
+      },
+      {
+        "title": "Sunburn / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+        "url": "https://ipm.ucanr.edu/home-and-landscape/sunburn/"
+      },
+      {
+        "title": "Bearss lime, Citrus latifolia (CRC 3772) - UC Riverside Citrus Variety Collection",
+        "url": "https://citrusvariety.ucr.edu/crc3772"
+      },
+      {
+        "title": "Tahiti lime (CRC 391) - UC Riverside Citrus Variety Collection",
+        "url": "https://citrusvariety.ucr.edu/crc391"
+      },
+      {
+        "title": "Mexican lime, Citrus aurantifolia (CRC 1710) - UC Riverside Citrus Variety Collection",
+        "url": "https://citrusvariety.ucr.edu/crc1710"
+      },
+      {
+        "title": "West Indian lime, Citrus aurantifolia (CRC 1813) - UC Riverside Citrus Variety Collection",
+        "url": "https://citrusvariety.ucr.edu/crc1813"
+      },
+      {
+        "title": "Citrus for the Home Garden (UC Master Gardeners of San Diego County, PDF)",
+        "url": "https://mastergardenerssandiego.org/downloads/citrus%20for%20the%20home%20garden.pdf"
+      },
+      {
+        "title": "Frost and Protection of Sensitive Plants - UC Master Gardeners of Sacramento County",
+        "url": "https://ucanr.edu/site/uc-master-gardeners-sacramento-county/frost-and-protection-sensitive-plants"
+      },
+      {
+        "title": "Frost Protection for Citrus - The Real Dirt (UC ANR)",
+        "url": "https://ucanr.edu/blog/real-dirt/article/frost-protection-citrus-1"
+      },
+      {
+        "title": "Answers to frequently asked questions about Citrus | Cooperative Extension Ventura County",
+        "url": "https://ucanr.edu/county/cooperative-extension-ventura-county/answers-frequently-asked-questions-about-citrus"
+      },
+      {
+        "title": "When there are summer heat spikes, trees need more water | Fresno Gardening Green (UC ANR)",
+        "url": "https://ucanr.edu/node/114995"
+      },
+      {
+        "title": "Bearss Seedless Lime Tree - Four Winds Growers",
+        "url": "https://fourwindsgrowers.com/products/bearss-seedless-lime-tree"
+      },
+      {
+        "title": "CDFA - Citrus - Huanglongbing (HLB)",
+        "url": "https://www.cdfa.ca.gov/Citrus/pests_diseases/hlb/regulation.html"
+      }
+    ]
+  }
+}

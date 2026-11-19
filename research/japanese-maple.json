@@ -1,0 +1,161 @@
+{
+  "name": "Japanese maple",
+  "variety": null,
+  "category": "tree",
+  "location": "Back yard (in ground)",
+  "quantity": 1,
+  "method": "established",
+  "plan": {},
+  "profile": {
+    "summary": "In Pasadena this tree is at the hot, dry, alkaline edge of its range, so it most needs afternoon shade, shelter from hot dry wind, and steady deep moisture under a 3-inch mulch. The other chronic problems are salt build-up from very hard tap water (brown leaf edges) and iron/manganese lock-up in alkaline soil (yellow leaves with green veins), so feed very lightly and leach the root zone now and then.",
+    "seedPrep": null,
+    "sowing": "",
+    "germination": null,
+    "indoorWeeks": null,
+    "hardenOffDays": null,
+    "windows": [],
+    "daysToMaturity": null,
+    "harvestWeeks": null,
+    "harvestNotes": "",
+    "harvestSeason": null,
+    "harvest": null,
+    "succession": null,
+    "fertilizer": [
+      {
+        "label": "Light spring feed (optional)",
+        "product": "Organic slow-release acid-forming fertilizer (azalea/camellia or Japanese maple type, e.g. 4-8-5 or 5-5-5); keep nitrogen low",
+        "amount": "Go light: no more than half the label rate for a small tree, scattered under the canopy and watered in. Sources give no exact amount for a 6 ft tree.",
+        "start": "calendar",
+        "dates": [
+          "03-15"
+        ],
+        "notes": "Optional. UC IPM does not recommend fertilizing established woody plants unless a deficiency is shown, and says to minimize fertilizer where salts are a problem; Sunset and specialist nurseries suggest one light feed as new growth emerges. Skip it if growth and leaf color are good. Never feed during heat or after June 1. The mid-March date is adapted to Pasadena leaf-out (nurseries in colder areas say late April)."
+      },
+      {
+        "label": "Iron/manganese chelate - only if leaves yellow between green veins",
+        "product": "Chelated iron and/or manganese micronutrient product",
+        "amount": "Per product label (foliar spray on new leaves or soil drench as the label directs)",
+        "start": "calendar",
+        "dates": [
+          "04-15"
+        ],
+        "notes": "Only if leaves yellow between green veins. UC IPM: chelates are a quick, temporary fix; the lasting remedy is composted mulch over the roots, less frequent but deep irrigation, good drainage, and lowering pH (for established plants, 2-3 teaspoons of elemental sulfur mixed into soil in holes dug around the drip line; sulfur works slowly and poorly in soils high in lime). Too much manganese is toxic, so do not exceed the label."
+      },
+      {
+        "label": "Refresh mulch",
+        "product": "Composted organic mulch / wood chips (not gravel)",
+        "amount": "Top up to a 3-inch layer over the root zone, pulled back several inches from the trunk",
+        "start": "calendar",
+        "dates": [
+          "05-01"
+        ],
+        "notes": "Do it before summer heat. Mulch keeps roots cool, holds moisture, and reduces the surface evaporation that concentrates salts."
+      },
+      {
+        "label": "Deep leaching irrigation (flush salts)",
+        "product": "Plain water, slow and long (no fertilizer)",
+        "amount": "Run a slow soak well past a normal watering so water moves salts below the root zone; then let the soil drain before the next irrigation",
+        "start": "calendar",
+        "dates": [
+          "06-15",
+          "09-01"
+        ],
+        "notes": "Sunset: occasional flooding of the soil helps leach out salts; UC IPM: leach by applying more water than is needed to wet the root zone, irrigating longer and less often rather than more often. Skip if soil is already wet or drains poorly (root rot risk). Winter rain does this job for free in wet years. Dates are a scheduling choice, not from a source."
+      }
+    ],
+    "water": "Deep and infrequent rather than shallow and often. Roughly: summer and early autumn (Jun-Oct) a long, slow soak every 7-10 days, tightening to about twice a week during heat waves and Santa Ana wind events; spring and late autumn about every 10-14 days if there is no rain; winter (leafless) only during long dry spells. Wet the whole root zone under and just beyond the canopy, then let the top few inches dry slightly. Check soil before watering: overwatering and soggy soil kill more Japanese maples than drought. Water at soil level (drip or soaker), not with sprinklers on the leaves, because salty water burns foliage.",
+    "sun": "Morning sun with afternoon shade, or filtered shade all day; north or east side of the house or under high tree canopy is ideal. Shelter from hot, dry or constant wind. Full afternoon sun inland will scorch leaves every summer.",
+    "spacing": "Species grows slowly to about 20 ft tall with an equal or greater spread (many cultivars stay 6-15 ft). Allow roughly 10 ft of clearance from walls and other trees; roots are shallow, fibrous and non-aggressive.",
+    "soil": "Prefers well-drained but moisture-retentive soil, slightly acidic at pH 5.5-6.5. Pasadena soil and water are alkaline: iron deficiency shows above about pH 7.0-7.5. Do not dig around the roots of an established tree; instead keep a permanent composted mulch, use acid-forming organic fertilizer if you feed at all, consider small pockets of elemental sulfur at the drip line, and avoid waterlogging, which worsens both chlorosis and root rot.",
+    "frostTenderBelowF": 32,
+    "heatStressAboveF": 95,
+    "pests": [
+      "Leaf scorch (abiotic; the main problem here) - brown, crispy leaf edges and tips from heat, dry air, hot wind or dry soil. Give afternoon shade and wind shelter, deep water before forecast heat or Santa Anas, keep 3 inches of mulch. Scorched leaves do not recover but the tree usually does.",
+      "Salt burn from hard tap water or fertilizer - browning that starts at tips and margins of older leaves. Leach with a long slow soak, keep sprinklers off the foliage, mulch, and minimize fertilizer.",
+      "Iron/manganese chlorosis in alkaline soil - new leaves yellow or pale with green veins. Mulch with compost, water less often but deeply, apply chelate per label as a temporary fix.",
+      "Verticillium wilt - sudden wilting and browning of one branch or one side, dark streaks in the wood. No cure; prune out dead branches, keep the tree vigorous and evenly watered, do not replant susceptible plants in the same spot.",
+      "Phytophthora root and crown rot - decline and dieback in wet, poorly drained soil. Prevent by not overwatering, keeping mulch off the trunk, and never burying the root crown.",
+      "Spider mites - stippled, dusty-looking leaves in hot dry weather. Hose off foliage (early morning) and keep the tree from drought stress; avoid broad-spectrum sprays.",
+      "Aphids and soft scales - sticky honeydew, sooty mold, ants on the trunk. Hose off aphids, control ants, and use horticultural oil on scale crawlers only if heavy.",
+      "Sunburn of bark and exposed limbs - cracked or dead bark on the south/west side after heavy pruning or loss of shade. Do not open up the canopy in summer.",
+      "Powdery mildew, anthracnose and leaf spots - occasional and cosmetic; rake up fallen leaves, no spray needed."
+    ],
+    "companions": [],
+    "avoidNear": [],
+    "notes": "Cultivar unknown, so this profile is for the species Acer palmatum in general; red-leaf and lace-leaf (dissectum) types usually scorch more easily than green upright types, and mature size varies widely by cultivar. Treated as an established in-ground tree in native alkaline soil. PRUNING WINDOW (Pasadena): do structural pruning while the tree is fully leafless and dormant, about Dec 15 - Jan 31, before buds swell in February; maples bleed sap if cut as sap rises in late winter/early spring, and tender new bark tears easily then. Light thinning or removal of water sprouts is fine in early summer (June), but do not open the canopy or prune hard in the heat of Jul-Oct (bark sunburn, Santa Ana stress). Never remove more than about 20% of the canopy in a year; dead wood can come out any time. Sources disagree: Sunset says prune in summer or early fall in mild-winter areas to limit sap bleed, and Mendocino Maples says mid-July through August; Pacific Horticulture and Mr Maple say winter dormancy for structural work and to avoid the full heat of summer. The winter window above is the more conservative reading for inland heat. FROST: the dormant tree is fully hardy to anything Pasadena gets; 32 F matters only after leaf-out (roughly late Feb-Apr), when a freeze can kill new growth - drape with a sheet or frost cloth overnight. HEAT: the alert threshold is set at 95 F, a practical level for Pasadena that is not from a source; 85 F is a general onset-of-heat-stress figure for landscape trees and shrubs from Rutgers (New Jersey), the only sourced number found; in Pasadena it will be exceeded most days Jun-Oct. WATER: Pasadena Water and Power reports average hardness of 12.9 grains per gallon ('very hard'). Unverified: no source gave a Japanese-maple-specific heat threshold; a practical alert level here may be nearer 95 F. Unverified: exact watering depth in inches and gallons per watering for a 6 ft tree (sources say only 'deep' and 'whole root zone'); the seasonal intervals outside summer are extrapolated from the 7-10 day established-tree figure. Unverified: fertilizer amount for a 6 ft tree, and the specific calendar dates for feeding (03-15), chelate (04-15), mulch (05-01) and leaching (06-15, 09-01), which are scheduling choices fitted to Pasadena, not source dates. Unverified: the Dec 15 - Jan 31 dormancy dates for Pasadena are an inference from local leaf-drop timing. Unverified: whether chlorine/chloramine in Pasadena tap water harms Japanese maples (PWP says only that chlorine and chloramine are used as disinfectants); the documented water problem is hardness and salts. Unverified: which chelate form (e.g. EDDHA) works best at this soil pH - UC IPM says only to follow the label. Unverified: gypsum top-dressing for salts (Roger's Gardens recommends it; UC IPM says amendments cannot fix saline soil and gypsum helps only sodic soil - get a soil test first). Unverified: invasive shot hole borer risk to this tree in the San Gabriel Valley was not checked. Not opened: Cal Poly SelecTree (needs JavaScript) and Missouri Botanical Garden Plant Finder (blocked), so no data is taken from them.",
+    "sources": [
+      {
+        "title": "Acer palmatum (Japanese Maple) - Sunset Plant Finder",
+        "url": "https://sunset.com/garden/flowers-plants/plant-finder-Acer-palmatum-japanese-maple"
+      },
+      {
+        "title": "Japanese maples - Sunset Magazine",
+        "url": "https://sunset.com/garden/flowers-plants/japanese-maples"
+      },
+      {
+        "title": "Maple / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+        "url": "https://ipm.ucanr.edu/PMG/GARDEN/PLANTS/maple.html"
+      },
+      {
+        "title": "Nutrient and Mineral Excesses, Salinity, and Salt Toxicity - UC IPM",
+        "url": "https://ipm.ucanr.edu/PMG/GARDEN/ENVIRON/salttoxicity.html"
+      },
+      {
+        "title": "Nutrient Deficiencies / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+        "url": "https://ipm.ucanr.edu/home-and-landscape/nutrient-deficiencies/"
+      },
+      {
+        "title": "Iron Deficiency - UC IPM",
+        "url": "https://ipm.ucanr.edu/home-and-landscape/iron-deficiency/"
+      },
+      {
+        "title": "Manganese Deficiency - UC IPM",
+        "url": "https://ipm.ucanr.edu/home-and-landscape/manganese-deficiency/"
+      },
+      {
+        "title": "Verticillium Wilt / Home and Landscape / UC Statewide IPM Program (UC IPM)",
+        "url": "https://ipm.ucanr.edu/home-and-landscape/verticillium-wilt/"
+      },
+      {
+        "title": "Japanese Maple Placement and Care - UC Master Gardeners of Placer County",
+        "url": "https://ucanr.edu/node/164196"
+      },
+      {
+        "title": "Leaf Scorch on Japanese Mapel - UC Cooperative Extension Ventura County",
+        "url": "https://ucanr.edu/node/125746"
+      },
+      {
+        "title": "Everything You Want to Know About Growing Japanese Maples - Roger's Gardens",
+        "url": "https://www.rogersgardens.com/blogs/current-news-events/everything-you-want-to-know-about-growing-japanese-maples"
+      },
+      {
+        "title": "Revealing the 'Essence of the Tree': Aesthetic Pruning of Japanese Maples - Pacific Horticulture",
+        "url": "https://pacifichorticulture.org/?p=1768"
+      },
+      {
+        "title": "Japanese Maple Care Guide - Planting, Watering, Pruning & Fertilizing - Mendocino Maples Nursery",
+        "url": "https://mendocinomaples.com/pages/japanese-maple-care"
+      },
+      {
+        "title": "Japanese Maple Spring Weather Protection: Frost, Wind & Snow - Mendocino Maples Nursery",
+        "url": "https://mendocinomaples.com/pages/japanese-maple-spring-weather-protection-frost-wind-snow"
+      },
+      {
+        "title": "Japanese Maple Care Guide - Mr Maple",
+        "url": "https://mrmaple.com/pages/japanese-maple-care-guide"
+      },
+      {
+        "title": "Managing Heat Stress in Nursery and Landscape Plants - Rutgers Plant & Pest Advisory",
+        "url": "https://plant-pest-advisory.rutgers.edu/tag/leaf-scorch/"
+      },
+      {
+        "title": "Acer palmatum 'Burgundy Lace': 'Burgundy Lace' Japanese Maple (ENH-184) - UF/IFAS",
+        "url": "https://ask.ifas.ufl.edu/publication/ST025/pdf"
+      },
+      {
+        "title": "Water Quality FAQs - Pasadena Water and Power",
+        "url": "https://pwp.cityofpasadena.net/waterqualityfaqs/"
+      }
+    ]
+  }
+}
