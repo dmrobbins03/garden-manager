@@ -100,6 +100,7 @@
   .win { position: absolute; top: 6px; height: 4px; opacity: .55; }
   .win.sow-indoors, .win.direct-sow { background: var(--water); } .win.transplant { background: var(--leaf); top: 6px; }
   .win.direct-sow { top: 6px; }
+  .sowtick { position: absolute; top: 11px; width: 2px; height: 22px; background: var(--water); margin-left: -1px; }
   .feed { position: absolute; top: 31px; width: 6px; height: 6px; border-radius: 50%; background: var(--clay); margin-left: -3px; }
   .now { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--clay); margin-left: -1px; }
   .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 14px; font-size: 12.5px; color: var(--soft); }
@@ -235,10 +236,11 @@
     var today = [], overdue = [], upcoming = [];
     G.events.forEach(function (e) {
       if (e.done) return;
+      var who = e.plant + (e.round ? ' (sowing ' + e.round + ')' : '');
       if (e.date === T) today.push(e);
       else if (e.type === 'germination' && e.end && e.date < T) {
-        if (e.end < T) { if (e.end >= floor) overdue.push(Object.assign({}, e, { title: 'No germination logged for ' + e.plant + ' — check, resow if needed' })); }
-        else today.push(Object.assign({}, e, { title: 'Check for sprouts: ' + e.plant }));
+        if (e.end < T) { if (e.end >= floor) overdue.push(Object.assign({}, e, { title: 'No germination logged for ' + who + ' — check, resow if needed' })); }
+        else today.push(Object.assign({}, e, { title: 'Check for sprouts: ' + who }));
       }
       else if (ACTIONABLE[e.type] && e.date >= floor && e.date < T) overdue.push(e);
       else if (e.date > T && e.date <= end) upcoming.push(e);
@@ -277,7 +279,9 @@
     var byId = {}; G.events.forEach(function (e) { byId[e.id] = e; });
     var lines = Object.keys(ticks).map(function (id) {
       var e = byId[id]; if (!e) return null;
-      var cmd = e.milestone ? 'log ' + e.plantingId + ' ' + e.milestone + ' ' + ticks[id] : 'done ' + id;
+      var rnd = e.round ? ' --round ' + e.round : '';
+      var cmd = (e.type === 'harvest' && e.milestone !== 'finished') ? 'harvest ' + e.plantingId + ' ' + ticks[id] + rnd + ' (add --amount if I say how much)'
+        : e.milestone ? 'log ' + e.plantingId + ' ' + e.milestone + ' ' + ticks[id] + rnd : 'done ' + id;
       return '- ' + e.title + ' (done ' + ticks[id] + ') → python3 scripts/garden.py ' + cmd;
     }).filter(Boolean);
     copy('Update my garden manager (garden-manager folder). I finished these — record them and rebuild:\n' + lines.join('\n'), $('copy-log-msg'));
@@ -291,6 +295,32 @@
   }
   function list(arr) { return arr && arr.length ? '<ul>' + arr.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; }
   function block(h, body) { return body ? '<div><h4>' + h + '</h4>' + body + '</div>' : ''; }
+  function harvesting(p) {
+    var h = (p.profile || {}).harvest; if (!h) return '';
+    var rng = function (x, u) { return Array.isArray(x) ? x[0] + '–' + x[1] + u : x + u; };
+    var facts = [h.firstCutWhen ? 'First cut: ' + h.firstCutWhen + '.' : '', h.takeAtMost ? 'Take at most ' + h.takeAtMost + '.' : '',
+      h.regrowDays != null ? 'Ready again in ' + rng(h.regrowDays, ' days') + '.' : '', h.maxCuts ? 'About ' + h.maxCuts + ' cuts per sowing, then replace.' : '',
+      h.replaceWhen || ''].filter(Boolean).join(' ');
+    return list(h.steps) + (facts ? '<p class="soft" style="margin-top:6px">' + esc(facts) + '</p>' : '');
+  }
+  function harvestLog(p) {
+    var hs = (p.harvests || []).slice().reverse(); if (!hs.length) return '';
+    var c = (p.computed || {}).harvests || {};
+    var rows = hs.slice(0, 8).map(function (h) { return '<li><span class="mono">' + fmt(h.date) + '</span>' + (h.round ? ' · sowing ' + h.round : '') + (h.amount ? ' · ' + esc(h.amount) : '') + (h.notes ? ' <span class="soft">' + esc(h.notes) + '</span>' : '') + '</li>'; }).join('');
+    return '<p>' + hs.length + (hs.length === 1 ? ' picking' : ' pickings') + ' logged' + (c.nextCut ? ' · ready to cut again ' + fmt(c.nextCut) : '') + '.</p><ul>' + rows + '</ul>' + (hs.length > 8 ? '<p class="soft">Older pickings are in data/garden.json.</p>' : '');
+  }
+  function sowings(p) {
+    var c = p.computed || {}, su = c.succession || {}, rs = c.rounds || [];
+    if (!su.everyDays && !rs.length) return '';
+    var notes = ((p.profile || {}).succession || {}).notes;
+    var head = su.everyDays ? '<p>Resown every ' + su.everyDays + ' days while the sowing window is open.' + (notes ? ' <span class="soft">' + esc(notes) + '</span>' : '') + '</p>' : '';
+    var open = 0, rows = rs.filter(function (r) { return r.stage !== 'finished' && (r.sown || open++ < 4); }).map(function (r) {
+      var harv = r.harvestStart ? ' · pick ' + fmt(r.harvestStart) + (r.harvestEnd ? '–' + fmt(r.harvestEnd) : '') : '';
+      var cut = r.cuts ? ' · ' + r.cuts + (r.cuts === 1 ? ' cut' : ' cuts') + (r.spent ? ', used up' : '') : '';
+      return '<li><b>#' + r.round + '</b> ' + (r.sown ? 'sown ' + fmt(r.sow) + ' ✓' : 'sow ' + fmt(r.sow)) + harv + cut + ' <span class="soft">(' + esc(r.stage) + ')</span></li>';
+    }).join('');
+    return head + (rows ? '<ul>' + rows + '</ul>' : (su.everyDays ? '<p class="soft">Pick a first sowing date to start the schedule.</p>' : ''));
+  }
   function detail(p) {
     var f = p.profile || {}, g = f.germination || {};
     var rng = function (x, u) { return x == null ? '' : (Array.isArray(x) ? x[0] + '–' + x[1] : x) + u; };
@@ -305,6 +335,9 @@
       block('Sowing', f.sowing ? '<p>' + esc(f.sowing) + '</p>' : '') +
       block('Germination', g.days ? '<p>' + esc(rng(g.days, ' days') + (g.soilTempF ? ' at ' + rng(g.soilTempF, '°F') + ' soil' : '')) + (g.notes ? '<br><span class="soft">' + esc(g.notes) + '</span>' : '') + '</p>' : '') +
       block('Maturity', f.daysToMaturity ? '<p>' + esc(rng(f.daysToMaturity.days, ' days from ' + (f.daysToMaturity.from || 'sow'))) + (f.harvestNotes ? '<br><span class="soft">' + esc(f.harvestNotes) + '</span>' : '') + '</p>' : '') +
+      block('How to harvest', harvesting(p)) +
+      block('Harvest log', harvestLog(p)) +
+      block('Sowings', sowings(p)) +
       block('Feeding', feeds ? '<ul>' + feeds + '</ul>' : '') +
       block('Water', f.water ? '<p>' + esc(f.water) + '</p>' : '') +
       block('Sun &amp; spacing', (f.sun || f.spacing) ? '<p>' + esc([f.sun, f.spacing].filter(Boolean).join(' ')) + '</p>' : '') +
@@ -326,13 +359,17 @@
         var mark = function (k) { return a[k] ? ' ✓' : ''; };
         var germ = c.germination ? (c.germination[0] === c.germination[1] ? fmt(c.germination[0]) + ' ✓' : fmt(c.germination[0]) + '–' + fmt(c.germination[1])) : '—';
         var harv = c.harvestStart ? fmt(c.harvestStart) + (c.harvestEnd ? ' – ' + fmt(c.harvestEnd) : '') : '—';
+        var hl = c.harvests || {};
+        if (hl.count) harv += '<div class="sub">picked ' + hl.count + '× · last ' + fmt(hl.last) + (hl.nextCut ? ' · again ' + fmt(hl.nextCut) : '') + '</div>';
+        var su = c.succession || {};
+        var again = su.everyDays ? '<div class="sub">' + (su.nextSow ? 'sowing ' + (su.sown + 1) + ' · ' : '') + 'every ' + su.everyDays + ' d</div>' : '';
         return '<tr class="row" data-i="' + i + '" tabindex="0" aria-expanded="false"><td><div class="name">' + esc(p.name) + '</div><div class="sub">' + esc([p.variety, p.location, p.quantity ? '×' + p.quantity : ''].filter(Boolean).join(' · ')) + '</div>' +
           (c.warnings || []).map(function (w) { return '<div class="warn">⚠ ' + esc(w) + '</div>'; }).join('') + '</td>' +
           '<td><span class="stage ' + esc(c.stage) + '">' + esc(c.stage || '') + '</span></td>' +
-          '<td class="mono">' + fmt(c.seedPrep) + (c.seedPrep ? mark('seedPrep') : '') + '</td><td class="mono">' + fmt(c.sow) + (c.sow ? mark('sown') : '') + '</td><td class="mono">' + germ + '</td>' +
+          '<td class="mono">' + fmt(c.seedPrep) + (c.seedPrep ? mark('seedPrep') : '') + '</td><td class="mono">' + fmt(c.sow) + (c.sow ? mark('sown') : '') + again + '</td><td class="mono">' + germ + '</td>' +
           '<td class="mono">' + winText(p) + '</td><td class="mono">' + fmt(c.transplant) + (c.transplant ? mark('transplanted') : '') + '</td><td class="mono">' + harv + '</td><td class="mono">' + fmt(c.nextFeed) + '</td></tr>' +
           '<tr class="detail" hidden><td colspan="9">' + detail(p) + '</td></tr>';
-      }).join('') + '</tbody></table></div><p class="soft" style="font-size:12.5px;margin:8px 0 0">Click a row for its full care sheet. ✓ marks dates you have logged; the rest are projections.</p>';
+      }).join('') + '</tbody></table></div><p class="soft" style="font-size:12.5px;margin:8px 0 0">Click a row for its full care sheet. ✓ marks dates you have logged; the rest are projections. Repeat-sown plants show their next sowing; the care sheet lists every sowing.</p>';
   }
   function toggle(tr) { var d = tr.nextElementSibling; d.hidden = !d.hidden; tr.setAttribute('aria-expanded', String(!d.hidden)); }
   $('plantings').addEventListener('click', function (ev) { if (ev.target.closest('a')) return; var tr = ev.target.closest('tr.row'); if (tr) toggle(tr); });
@@ -356,16 +393,21 @@
           h += seg('win ' + w.type, s, e, w.type.replace('-', ' ') + ' window ' + fmtMD(w.start) + '–' + fmtMD(w.end));
         });
       });
-      var inGround = c.transplant || c.sow;
-      if (p.method === 'indoor-start') h += seg('bar indoor', c.sow, c.transplant, 'Indoors ' + fmt(c.sow) + ' → ' + fmt(c.transplant));
-      h += seg('bar grow', inGround, c.harvestStart, 'Growing ' + fmt(inGround) + ' → ' + fmt(c.harvestStart));
-      h += seg('bar harvest', c.harvestStart, c.harvestEnd, 'Harvest ' + fmt(c.harvestStart) + ' → ' + fmt(c.harvestEnd));
+      var rs = c.rounds ? c.rounds.filter(function (r) { return r.stage !== 'finished'; }) : [c];
+      var nth = function (r) { return r.round ? 'Sowing ' + r.round + ': ' : ''; };
+      rs.forEach(function (r) {
+        var inGround = r.transplant || r.sow;
+        if (p.method === 'indoor-start') h += seg('bar indoor', r.sow, r.transplant, nth(r) + 'indoors ' + fmt(r.sow) + ' → ' + fmt(r.transplant));
+        h += seg('bar grow', inGround, r.harvestStart, nth(r) + 'growing ' + fmt(inGround) + ' → ' + fmt(r.harvestStart));
+      });
+      rs.forEach(function (r) { h += seg('bar harvest', r.harvestStart, r.harvestEnd, nth(r) + 'harvest ' + fmt(r.harvestStart) + ' → ' + fmt(r.harvestEnd)); });
+      if (c.rounds) rs.forEach(function (r) { if (!r.sow) return; var d = parse(r.sow); if (d >= start && d <= end) h += '<div class="sowtick" style="left:' + pct(d) + '%" title="' + esc('Sowing ' + r.round + ' — ' + fmt(r.sow) + (r.sown ? ' ✓' : '')) + '"></div>'; });
       (feedsBy[p.id] || []).forEach(function (e) { var d = parse(e.date); if (d >= start && d <= end) h += '<div class="feed" style="left:' + pct(d) + '%" title="' + esc(e.title + ' — ' + fmt(e.date)) + '"></div>'; });
       h += '<div class="now" style="left:' + pct(now) + '%"></div>';
       return '<div class="tl-row"><div class="lab">' + esc(p.name) + (p.variety ? ' <span class="soft" style="font:400 12px var(--sans)">' + esc(p.variety) + '</span>' : '') + '</div><div class="track">' + h + '</div></div>';
     }).join('');
     $('timeline').innerHTML = '<div class="tl"><div class="tl-inner"><div class="tl-months"><div></div><div class="m">' + months + '</div></div>' + rows + '</div>' +
-      '<div class="legend"><span><i style="background:var(--water);height:4px;opacity:.55"></i>Sowing window</span><span><i style="background:var(--leaf);height:4px;opacity:.55"></i>Transplant window</span><span><i style="background:var(--water)"></i>Started indoors</span><span><i style="background:var(--leaf)"></i>In the ground</span><span><i style="background:var(--ochre)"></i>Harvest</span><span><i style="background:var(--clay);width:7px;height:7px;border-radius:50%"></i>Feeding</span><span><i style="background:var(--clay);width:2px;height:12px"></i>Today</span></div></div>';
+      '<div class="legend"><span><i style="background:var(--water);height:4px;opacity:.55"></i>Sowing window</span><span><i style="background:var(--leaf);height:4px;opacity:.55"></i>Transplant window</span><span><i style="background:var(--water)"></i>Started indoors</span><span><i style="background:var(--leaf)"></i>In the ground</span><span><i style="background:var(--ochre)"></i>Harvest</span><span><i style="background:var(--water);width:2px;height:14px"></i>Repeat sowing</span><span><i style="background:var(--clay);width:7px;height:7px;border-radius:50%"></i>Feeding</span><span><i style="background:var(--clay);width:2px;height:12px"></i>Today</span></div></div>';
   }
 
   // feeding
